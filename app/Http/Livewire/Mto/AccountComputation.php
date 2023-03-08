@@ -42,6 +42,7 @@ class AccountComputation extends Component
 
     public $assessed_value_modal = false;
     public $payment_record_modal = false;
+    public $open_peyment_modal = false;
     public $showDeleteSelectedRecordModal = false;
 
     ## VERIFYING RECORD
@@ -123,6 +124,19 @@ class AccountComputation extends Component
         $this->setAssessedValues($data);
         $this->setPaymentRecord($data);
         // $this->setDataToField($id);
+    }
+
+    public function openPayment()
+    {
+        $this->open_peyment_modal = true;
+    }
+    public function closePayment()
+    {
+        $this->open_peyment_modal = false;
+    }
+    public function savePayment()
+    {
+        $this->open_peyment_modal = false;
     }
 
 

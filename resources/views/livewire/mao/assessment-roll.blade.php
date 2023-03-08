@@ -1,57 +1,27 @@
 <div class="min-h-full">
     <div class="px-2 pt-2 sm:px-4 lg:px-4">
-        <x-header.top-banner />
-
-        <!-- This example requires Tailwind CSS v2.0+ -->
-        <div class="lg:flex lg:items-center lg:justify-between">
-            <div class="flex-1 min-w-0">
-                <nav class="flex" aria-label="Breadcrumb">
-                    <ol role="list" class="flex items-center space-x-4">
-                      <li>
-                        <div>
-                          <a href="{{ route('user-dashboard',['user_id'=> auth()->user()->id]) }}" class="text-gray-400 hover:text-gray-500">
-                            <!-- Heroicon name: solid/home -->
-                            <x-icon.home class="flex-shrink-0 w-5 h-5"/>
-                            <span class="sr-only">Home</span>
-                          </a>
-                        </div>
-                      </li>
-
-                      <li>
-                        <div class="flex items-center">
-                          <svg class="flex-shrink-0 w-5 h-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                            <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
-                          </svg>
-                          <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Assessor</a>
-                        </div>
-                      </li>
-
-                    </ol>
-                  </nav>
-
-                <h2 class="mt-2 text-lg font-bold leading-7 text-gray-900 sm:text-lg sm:truncate">
-                    Assessor Roll
-                </h2>
-                <div class="flex flex-col mt-1 sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-
-                </div>
-            </div>
-            <div class="flex mt-2 lg:mt-0 lg:ml-4">
-
-
-                <div class="flex items-center text-sm text-gray-500">
-                    <!-- Heroicon name: solid/calendar -->
-                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd"
-                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                            clip-rule="evenodd" />
+        <x-topbar-desktop>
+            <li class="flex">
+                <div class="flex items-center">
+                    <svg class="flex-shrink-0 w-6 h-full text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                     </svg>
-                    {{ date('M d, Y') }}
+                    <a href="{{ route('user-dashboard',['user_id'=> auth()->user()->id]) }}" class="ml-4 text-sm font-medium text-white hover:text-blue-200">
+                        Dashboard
+                    </a>
                 </div>
-            </div>
-        </div>
-
+            </li>
+            <li class="flex">
+                <div class="flex items-center">
+                    <svg class="flex-shrink-0 w-6 h-full text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="#" class="ml-4 text-sm font-medium text-white hover:text-blue-200">
+                        Assessment Roll
+                    </a>
+                </div>
+            </li>
+        </x-topbar-desktop>
 
         <div class="grid grid-cols-1 gap-4 mt-4 lg:grid-cols-2">
             <div class="flex items-center flex-1">
@@ -77,7 +47,7 @@
                             <option value="100">100 / page</option>
                         </x-select>
                     </div>
-                    <div>
+                    {{-- <div>
                         <x-dropdown class="rounded-xl" label="Action">
                             <x-dropdown.item class="rounded-xl" type="button" wire:click="$toggle('showDeleteSelectedRecordModal')"
                                 class="flex items-center space-x-2">
@@ -98,10 +68,10 @@
                             class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent shadow-sm rounded-xl hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
                             <x-icon.download class="w-5 h-5" /> <span>Import</span>
                         </x-button>
-                    </div>
+                    </div> --}}
                     <div>
                         <x-button wire:click="create"
-                            class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent shadow-sm w-max rounded-xl hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
+                            class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent shadow-sm w-max rounded-xl hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
                             <x-icon.plus class="w-5 h-5" /> <span>Create</span>
                         </x-button>
                     </div>
@@ -114,27 +84,27 @@
             <div class="overflow-hidden overflow-x-scroll align-middle shadow sm:rounded-lg">
                 <x-table>
                     <x-slot name="head">
-                        <x-table.head class="px-2 py-2">
+                        <x-table.head class="px-2 py-2 bg-blue-500">
                             <x-checkbox wire:model="selectPage" />
                         </x-table.head>
-                        <x-table.head class="px-2.5 truncate py-1" sortable wire:click="sortBy('date')"
+                        <x-table.head class="bg-blue-500 text-white px-2.5 truncate py-1" sortable wire:click="sortBy('date')"
                             :direction="$sortField === 'date' ? $sortDirection : null">PIN
                         </x-table.head>
-                        <x-table.head class="px-2.5 truncate py-1" sortable wire:click="sortBy('date')"
+                        <x-table.head class="bg-blue-500 text-white px-2.5 truncate py-1" sortable wire:click="sortBy('date')"
                             :direction="$sortField === 'date' ? $sortDirection : null">TD/ARP No.
                         </x-table.head>
-                        <x-table.head class="px-2.5 truncate py-1" sortable wire:click="sortBy('tn')"
+                        <x-table.head class="bg-blue-500 text-white px-2.5 truncate py-1" sortable wire:click="sortBy('tn')"
                             :direction="$sortField === 'tn' ? $sortDirection : null">Property Owner
                         </x-table.head>
-                        <x-table.head class="w-10 px-2.5 truncate py-1">Address</x-table.head>
-                        <x-table.head class="px-2.5 truncate py-1">Kind</x-table.head>
-                        <x-table.head class="px-2.5 truncate py-1">Class</x-table.head>
-                        <x-table.head width="20px" class="px-2.5 truncate py-1">AV</x-table.head>
-                        <x-table.head class="px-2.5 truncate py-1">Effectivity</x-table.head>
-                        <x-table.head class="px-2.5 truncate py-1">Prev TD/ARP No.</x-table.head>
-                        <x-table.head class="px-2.5 truncate py-1">Prev AV</x-table.head>
-                        <x-table.head width="10px" class="px-2.5 max-w-md truncate py-1">Remarks</x-table.head>
-                        <x-table.head class="w-10 px-6 py-1"><span class="sr-only">Edit</span></x-table.head>
+                        <x-table.head class="bg-blue-500 text-white w-10 px-2.5 truncate py-1">Address</x-table.head>
+                        <x-table.head class="bg-blue-500 text-white px-2.5 truncate py-1">Kind</x-table.head>
+                        <x-table.head class="bg-blue-500 text-white px-2.5 truncate py-1">Class</x-table.head>
+                        <x-table.head width="20px" class="bg-blue-500 text-white px-2.5 truncate py-1">AV</x-table.head>
+                        <x-table.head class="bg-blue-500 text-white px-2.5 truncate py-1">Effectivity</x-table.head>
+                        <x-table.head class="bg-blue-500 text-white px-2.5 truncate py-1">Prev TD/ARP No.</x-table.head>
+                        <x-table.head class="bg-blue-500 text-white px-2.5 truncate py-1">Prev AV</x-table.head>
+                        <x-table.head width="10px" class="bg-blue-500 text-white px-2.5 max-w-md truncate py-1">Remarks</x-table.head>
+                        <x-table.head class="w-10 px-6 bg-blue-500 pytext-white -1"><span class="sr-only">Edit</span></x-table.head>
                     </x-slot>
 
                     <x-slot name="body">
@@ -195,31 +165,10 @@
                             </x-table.cell>
                             <x-table.cell class="max-w-2xl">
                                 <div class="flex justify-center space-x-2">
-                                    <div>
-                                        <span class="relative z-0 inline-flex rounded-md shadow-sm">
-                                            <span class="relative inline-flex items-center px-2 py-2 bg-white border border-gray-300 rounded-l-md">
-                                              <label for="dropdown1">Option</label>
-                                            </span>
-                                            <select id="dropdown1" class="block w-full py-2 pl-3 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-none pr-9 rounded-r-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-                                              <option><span class="ml-4">
-                                                Sample
-                                            </span></option>
-                                              <option>Ledger</option>
-                                              <option>
-                                                <x-button class="px-2 rounded-xl" wire:click="toggleDeleteSingleRecordModal({{ $item->id }})">
-                                                    <x-icon.trash class="w-5 h-5" />
-                                                </x-button>
-                                              </option>
-                                            </select>
-                                          </span>
-                                    </div>
-                                    <a href="{{ route('ledger-entry',['user_id'=>Auth::user()->id,'id'=>$item->id]) }}" class="px-2 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 shadow-sm rounded-xl">
+                                    <a href="{{ route('ledger-entry',['user_id'=>Auth::user()->id,'id'=>$item->id]) }}" class="px-2 py-2 text-sm font-medium border border-gray-300 shadow-sm rounded-xl hover:bg-blue-500 hover:text-white">
                                         <x-icon.view class="w-5 h-5" />
                                     </a>
-                                    <a href="{{ route('Document Overview',['user_id'=>Auth::user()->id,'id'=>$item->id]) }}" class="w-8 px-2 py-2 text-sm font-medium text-center text-gray-700 bg-white border border-gray-300 shadow-sm rounded-xl">
-                                        V
-                                    </a>
-                                    <x-button class="px-2 rounded-xl" wire:click="toggleDeleteSingleRecordModal({{ $item->id }})">
+                                    <x-button class="px-2 rounded-xl hover:bg-blue-500 hover:text-white" wire:click="toggleDeleteSingleRecordModal({{ $item->id }})">
                                         <x-icon.trash class="w-5 h-5" />
                                     </x-button>
                                 </div>

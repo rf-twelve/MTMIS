@@ -1,0 +1,3 @@
+<div>
+    BOOKLET SETTINGS
+</div>

@@ -15,6 +15,17 @@ use App\Http\Livewire\Mto\AccountList;
 use App\Http\Livewire\Mto\AccountVerification;
 use App\Http\Livewire\Mto\Collections;
 use App\Http\Livewire\Mto\LedgerEntry;
+use App\Http\Livewire\Mto\MtoReports;
+use App\Http\Livewire\Mto\MtoSettings;
+use App\Http\Livewire\Mto\Reports;
+use App\Http\Livewire\Mto\Reports\AssessmentRollReport;
+use App\Http\Livewire\Mto\Reports\CollectibleReport;
+use App\Http\Livewire\Mto\Reports\CollectionAndDepositReport;
+use App\Http\Livewire\Mto\Reports\DelinquencyReport;
+use App\Http\Livewire\Mto\Settings\BookletSetting;
+use App\Http\Livewire\Mto\Settings\FormSetting;
+use App\Http\Livewire\Mto\Settings\LocalitySetting;
+use App\Http\Livewire\Mto\Settings\TaxSetting;
 use App\Http\Livewire\User\Dashboard as UserDashboard;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +86,15 @@ Route::group(['prefix' => 'user',  'middleware' => 'auth'], function()
     Route::get('{user_id}/account-verification/{id}', AccountVerification::class)->name('account-verification');
     Route::get('{user_id}/collections', Collections::class)->name('collections');
     Route::get('{user_id}/ledger-entry/{id}', LedgerEntry::class)->name('ledger-entry');
+    Route::get('{user_id}/mto-reports', MtoReports::class)->name('mto-reports');
+    Route::get('{user_id}/reports/assessment-roll-report', AssessmentRollReport::class)->name('reports/assessment-roll-report');
+    Route::get('{user_id}/reports/collectible-report', CollectibleReport::class)->name('reports/collectible-report');
+    Route::get('{user_id}/reports/collection-and-deposit-report', CollectionAndDepositReport::class)->name('reports/collection-and-deposit-report');
+    Route::get('{user_id}/reports/delinquency-report', DelinquencyReport::class)->name('reports/delinquency-report');
+    Route::get('{user_id}/mto-settings', MtoSettings::class)->name('mto-settings');
+    Route::get('{user_id}/settings/form-setting', FormSetting::class)->name('settings/form-setting');
+    Route::get('{user_id}/settings/locality-setting', LocalitySetting::class)->name('settings/locality-setting');
+    Route::get('{user_id}/settings/tax-setting', TaxSetting::class)->name('settings/tax-setting');
 
     ## USER MANAGEMENT
     Route::get('{user_id}/profile-settings', ProfileSettings::class)->name('Profile Settings');

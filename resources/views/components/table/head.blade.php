@@ -3,13 +3,13 @@
     'direction' => null,
 ])
 
-<th {{ $attributes->merge(['class'=>'bg-gray-100'])->only('class') }}>
+<th {{ $attributes->merge(['class'=>'text-lg uppercase'])}}>
     @unless ($sortable)
-        <span class="flex px-3 font-medium tracking-wider text-gray-500 uppercase text-sm">
+        <span class="flex px-3 text-sm font-medium tracking-wider">
             {{ $slot }}
         </span>
     @else
-        <button {{ $attributes->except('class')}} class="flex text-gray-500 tracking-wider items-center space-x-1 text-sm leading-4 text-left font-medium">
+        <button {{ $attributes->except('class')}} class="flex items-center space-x-1 text-sm font-medium leading-4 tracking-wider text-left">
             <span>{{ $slot }}</span>
             <span>
                 @if ($direction === 'asc')

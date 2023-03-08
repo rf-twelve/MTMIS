@@ -343,7 +343,7 @@
                                             <x-slot name="head">
                                                 <thead class="px-3 text-sm text-center text-gray-900 bg-gray-300 border border-gray-50">
                                                     <tr class="font-semibold">
-                                                        <th rowspan="2" class="text-center border">
+                                                        <th rowspan="2" class="text-center border sr-only">
                                                             <x-checkbox wire:model="selectedAll" value="" />
                                                         </th>
                                                         <th class="text-center border">BRACKET</th>
@@ -396,20 +396,20 @@
                                                     <td colspan="7" class="px-3 py-2 border">
                                                         SPECIAL EDUCATION FUND
                                                     </td>
-                                                    <td class="px-3 py-2 border">{{ 'P '. number_format($sef, 2, '.', ',') }}</td>
+                                                    <td class="px-3 py-2 bg-white border">{{ 'P '. number_format($sef, 2, '.', ',') }}</td>
                                                 </tr>
                                                 <tr class="px-3 py-2 bg-gray-300 border whitespace-nowrap">
                                                     <td colspan="7" class="px-3 py-2 border">
                                                         <div class="flex justify-between">
                                                             <span>GRAND TOTAL</span>
                                                             <a wire:click="openPayment()" href="#"
-                                                                class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white rounded-xl hover:bg-gray-50 focus:z-10 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600">
+                                                                class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-900 bg-white rounded-xl hover:bg-blue-500 focus:z-10 focus:bg-blue-500">
                                                                 <x-icon.circle-check class="w-5 h-5 mr-1 text-gray-400" />
                                                                 <span>Payment</span>
                                                             </a>
                                                         </div>
                                                     </td>
-                                                    <td class="px-3 py-2 border">{{ 'P '. number_format($sef * 2, 2, '.', ',') }}</td>
+                                                    <td class="px-3 py-2 text-lg font-medium bg-white border">{{ 'P '. number_format($sef * 2, 2, '.', ',') }}</td>
                                                 </tr>
                                             </x-slot>
                                         </x-table>
@@ -475,6 +475,33 @@
                             {{ __('Cancel') }}
                         </x-button>
                         <x-button wire:click="savePaymentRecord()" type="button" class="hover:bg-blue-500 hover:text-white">
+                            {{ __('Save') }}
+                        </x-button>
+                    </x-slot>
+                </x-modal.dialog>
+            </div>
+
+            <!-- OPEN PAYMENT FORM -->
+            <div>
+                <x-modal.dialog wire:model="open_peyment_modal" maxWidth="md">
+                    <x-slot name="title">
+                        <div class="flex">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                            <span>PAYMENT FORM</span>
+                        </div>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <x-input-group.payment-form-fields />
+                    </x-slot>
+
+                    <x-slot name="footer">
+                        <x-button wire:click="closePayment()" type="button" class="text-white bg-gray-400 hover:bg-gray-500">
+                            {{ __('Cancel') }}
+                        </x-button>
+                        <x-button wire:click="savePayment()" type="button" class="hover:bg-blue-500 hover:text-white">
                             {{ __('Save') }}
                         </x-button>
                     </x-slot>
