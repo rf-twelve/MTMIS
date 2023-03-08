@@ -8,7 +8,7 @@
                 <li>
                     <div>
                     <a href="{{ route('user-dashboard',['user_id'=>Auth::user()->id]) }}" class="text-gray-400 hover:text-gray-700">
-                        <x-icon.home class="flex-shrink-0 h-5 w-5"/>
+                        <x-icon.home class="flex-shrink-0 w-5 h-5"/>
                         <span class="sr-only">Home</span>
                     </a>
                     </div>
@@ -16,14 +16,14 @@
 
                 <li>
                     <div class="flex items-center">
-                    <x-icon.chevron-right class="flex-shrink-0 h-5 w-5 text-gray-400"/>
+                    <x-icon.chevron-right class="flex-shrink-0 w-5 h-5 text-gray-400"/>
                     <a href="{{ route('collections',['user_id'=>Auth::user()->id]) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Collections</a>
                     </div>
                 </li>
 
                 <li>
                     <div class="flex items-center">
-                    <x-icon.chevron-right class="flex-shrink-0 h-5 w-5 text-gray-400"/>
+                    <x-icon.chevron-right class="flex-shrink-0 w-5 h-5 text-gray-400"/>
                     <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" aria-current="page">Computations</a>
                     </div>
                 </li>
@@ -208,13 +208,13 @@
                                                         <td class="border border-gray-300">
                                                             <table class="w-full">
                                                                 <tr class="bg-gray-300">
-                                                                    <td class="font-semibold flex">
+                                                                    <td class="flex font-semibold">
                                                                         @if ($av_array['av_year_from'] == $av_array['av_year_from'])
                                                                             {{ $av_array['av_year_from']}}
                                                                         @else
                                                                             {{ $av_array['av_year_from'].'-'.$av_array['av_year_from'] }}
                                                                         @endif
-                                                                        {{-- <div class="ml-1 mt-1 flex">
+                                                                        {{-- <div class="flex mt-1 ml-1">
                                                                             <a wire:click="editAssessedValue({{ $key }})" href="#" class="text-blue-500 hover:text-indigo-900">
                                                                                 <x-icon.edit class="w-4" />
                                                                             </a>
@@ -256,13 +256,13 @@
                                             <x-slot name="head">
                                                 <thead class="px-3 text-sm text-center bg-gray-200">
                                                     <tr class="font-semibold">
-                                                        <th rowspan="2" class="text-center border bg-gray-300">#</th>
-                                                        <th colspan="4" class="text-center border bg-gray-300">TAX COLLECTED</th>
-                                                        <th rowspan="2" class="text-center border bg-gray-300">O.R. No.</th>
-                                                        <th colspan="4" class="text-center border bg-gray-300">PAYMENT DETAILS</th>
-                                                        <th rowspan="2" class="border bg-gray-300">DIRECTORY</th>
-                                                        <th rowspan="2" class="border bg-gray-300">REMARKS</th>
-                                                        <th rowspan="2" class="border bg-gray-300">TELLER</th>
+                                                        <th rowspan="2" class="text-center bg-gray-300 border">#</th>
+                                                        <th colspan="4" class="text-center bg-gray-300 border">TAX COLLECTED</th>
+                                                        <th rowspan="2" class="text-center bg-gray-300 border">O.R. No.</th>
+                                                        <th colspan="4" class="text-center bg-gray-300 border">PAYMENT DETAILS</th>
+                                                        <th rowspan="2" class="bg-gray-300 border">DIRECTORY</th>
+                                                        <th rowspan="2" class="bg-gray-300 border">REMARKS</th>
+                                                        <th rowspan="2" class="bg-gray-300 border">TELLER</th>
                                                         {{-- <th rowspan="2" class="relative py-3.5 pl-3 pr-4 sm:pr-6 bg-gray-300">
                                                             <span class="">OPTION</span>
                                                         </th> --}}
@@ -326,13 +326,13 @@
                                     </div>
                                     <div x-data={cbt_enabled:false} class="flex text-right">
                                             <!-- This example requires Tailwind CSS v2.0+ -->
-                                        <button x-on:click="cbt_enabled =! cbt_enabled" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
+                                        <button wire:click="removeAllPenalty()" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
                                             <span class="sr-only">Use setting</span>
                                             <span aria-hidden="true" class="absolute w-full h-full bg-white rounded-md pointer-events-none"></span>
                                             <!-- Enabled: "bg-indigo-600", Not Enabled: "bg-gray-200" -->
-                                            <span aria-hidden="true" :class="{cbt_enabled === false ? 'bg-gray-200':'bg-indigo-600'}" class="absolute h-4 mx-auto transition-colors duration-200 ease-in-out rounded-full pointer-events-none w-9"></span>
+                                            <span aria-hidden="true" class="{{ $cbt_enabled ? 'bg-indigo-600':'bg-gray-200' }} absolute h-4 mx-auto transition-colors duration-200 ease-in-out rounded-full pointer-events-none w-9"></span>
                                             <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                                            <span aria-hidden="true" class="absolute left-0 inline-block w-5 h-5 transition-transform duration-200 ease-in-out transform translate-x-5 bg-white border border-gray-200 rounded-full shadow pointer-events-none ring-0"></span>
+                                            <span aria-hidden="true" class="{{ $cbt_enabled ? 'translate-x-5':'translate-x-0' }} absolute left-0 inline-block w-5 h-5 transition-transform duration-200 ease-in-out transform translate-x-5 bg-white border border-gray-200 rounded-full shadow pointer-events-none ring-0"></span>
                                         </button>
                                         <span class="ml-3 text-xs">CBT</span>
                                     </div>
@@ -361,20 +361,33 @@
 
                                                 <?php $sef = 0; ?>
                                                 @forelse ($compute_quarter_result as $key => $result)
-                                                    <tr class="px-3 py-2 text-gray-500 border whitespace-nowrap">
-                                                        <td class="px-3 py-2 border">
-                                                            <x-checkbox wire:model="selectedAll" value="" />
-                                                        </td>
-                                                        <td class="px-3 py-2 border">{{ $result['label'] }}</td>
-                                                        <td class="px-3 py-2 border">{{ $result['year_no'] }}</td>
-                                                        <td class="px-3 py-2 border">{{ 'P '. $result['av'] }}</td>
-                                                        <td class="px-3 py-2 border">{{ 'P '. $result['tax_due'] }}</td>
-                                                        <td class="px-3 py-2 border">
-                                                            <x-checkbox wire:model="selectedAll" value="" />
-                                                        </td>
-                                                        <td class="px-3 py-2 border">{{ 'P '. number_format($result['penalty_temp'], 2, '.', ',') }}</td>
-                                                        <td class="px-3 py-2 border">{{ 'P '. number_format($result['total'], 2, '.', ',') }}</td>
-                                                    </tr>
+                                                    <tr class="{{ $result['status'] == true ? '':'bg-gray-400' }} px-3 py-2 text-gray-500 border whitespace-nowrap">
+                                                        @if ($result['status'] == true)
+                                                            <td class="px-3 py-2 border"><x-checkbox wire:click="toggleBracket({{ $key }})" checked/></td>
+                                                            <td class="px-3 py-2 border">{{ $result['label'] }}</td>
+                                                            <td class="px-3 py-2 border">{{ $result['year_no'] }}</td>
+                                                            <td class="px-3 py-2 border">{{ 'P '. $result['av'] }}</td>
+                                                            <td class="px-3 py-2 border">{{ 'P '. $result['tax_due'] }}</td>
+                                                            <td class="px-3 py-2 border">
+                                                                <x-checkbox wire:click="removeSelectedPenalty({{ $key }})" />
+                                                            </td>
+                                                            @if ($result['cbt'] == true)
+                                                                <td class="px-3 py-2 bg-gray-400 border">{{ 'P 0.00' }}</td>
+                                                            @else
+                                                                <td class="px-3 py-2 border">{{ 'P '. number_format($result['penalty_temp'], 2, '.', ',') }}</td>
+                                                            @endif
+                                                                <td class="px-3 py-2 border">{{ 'P '. number_format($result['total'], 2, '.', ',') }}</td>
+                                                        @else
+                                                            <td class="px-3 py-2 border"><x-checkbox wire:click="toggleBracket({{ $key }})"/></td>
+                                                            <td class="px-3 py-2 border">{{ $result['label'] }}</td>
+                                                            <td class="px-3 py-2 border">{{ $result['year_no'] }}</td>
+                                                            <td class="px-3 py-2 border">{{ 'P 0.00'}}</td>
+                                                            <td class="px-3 py-2 border">{{ 'P 0.00'}}</td>
+                                                            <td class="px-3 py-2 border"><x-checkbox disabled /></td>
+                                                            <td class="px-3 py-2 border">{{ 'P 0.00'}}</td>
+                                                            <td class="px-3 py-2 border">{{ 'P 0.00'}}</td>
+                                                        @endif
+                                                     </tr>
                                                     <?php $sef = $sef + $result['total']; ?>
                                                 @empty
                                                 @endforelse
@@ -387,7 +400,14 @@
                                                 </tr>
                                                 <tr class="px-3 py-2 bg-gray-300 border whitespace-nowrap">
                                                     <td colspan="7" class="px-3 py-2 border">
-                                                        GRAND TOTAL
+                                                        <div class="flex justify-between">
+                                                            <span>GRAND TOTAL</span>
+                                                            <a wire:click="openPayment()" href="#"
+                                                                class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white rounded-xl hover:bg-gray-50 focus:z-10 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600">
+                                                                <x-icon.circle-check class="w-5 h-5 mr-1 text-gray-400" />
+                                                                <span>Payment</span>
+                                                            </a>
+                                                        </div>
                                                     </td>
                                                     <td class="px-3 py-2 border">{{ 'P '. number_format($sef * 2, 2, '.', ',') }}</td>
                                                 </tr>

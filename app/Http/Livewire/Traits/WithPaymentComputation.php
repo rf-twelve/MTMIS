@@ -74,45 +74,6 @@ trait WithPaymentComputation
             return $dataArray;
         }
 
-
-    ## To check for new av value
-    // private function checkNewAV($assessedValue){
-    //     $newAvyear = (RptPercentage::select('year')->where('desc','oldav')->first())->year + 1;
-    //     return $assessedValue->where('av_year_from',$newAvyear)->where('av_year_to',$newAvyear)->count();
-    // }
-
-    ## Param acount_id and next_payment[year,quarter]
-    private function startCompute($id,$next_payment,$month)
-    {
-        $avs = $this->getAssessedValuesFromNextPayment($id,$next_payment);
-        $brackets = RptBracket::query()
-                ->select(
-                    'year_from as from',
-                    'year_to as to',
-                    'year_no',
-                    'label',
-                    $month.' as value',
-                    'av_percent',
-                )->get();
-        $year_old_av = ($brackets->where('label','Tax due 2021')->first())->from;
-
-        $var_array = [
-            'next_pay_year' => $next_payment['pay_year'],
-            'next_pay_quarter' => $next_payment['pay_quarter'],
-            'old_av_year' => $year_old_av,
-            'new_av_year' => $year_old_av + 1,
-            'assessed_values' => $avs,
-            'brackets' => $brackets->where('to','>=',$next_payment['pay_year'])->toArray(),
-        ];
-        if ($next_payment['pay_year'] > $brackets->last()->from) {
-            $this->dispatchBrowserEvent('swalPaymentIsUpdated');
-        } else {
-            return $this->regularCompute($var_array);
-        }
-
-
-    }
-
     ## Regular computation below old av
     public function regularCompute($var_array)
     {

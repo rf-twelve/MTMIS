@@ -14,6 +14,7 @@ class AccountComputation extends Component
     use WithPaymentComputation;
 
     public $account_id;
+    public $sample;
     public $assessment_roll_id;
     public $payment_record_id;
     public $rpt_account;
@@ -23,6 +24,8 @@ class AccountComputation extends Component
     public $payment_records_array = [];
     public $assessment_roll_array = [];
     public $account_selected;
+    public $cbt_enabled = false;
+    public $toggle_bracket = false;
     public $search_option, $search_input, $input_date, $month_selected = 'march';
     public $compute_quarter_result= []; // #COMPUTE BY QUARTER RESULT
     public $compute_bracket_result = []; // #COMPUTE BY BRACKET RESULT
@@ -60,6 +63,48 @@ class AccountComputation extends Component
                 }else{
                     $this->initializeComputation($data);
                 }
+            }
+        }
+    }
+
+    ## TOGGLE PENALTIES
+    public function removeAllPenalty()
+    {
+        $this->cbt_enabled =! $this->cbt_enabled;
+        if ($this->cbt_enabled) {
+            foreach ($this->compute_quarter_result as $key => $value) {
+                data_set($this->compute_quarter_result, $key.'.cbt', true);
+                data_set($this->compute_quarter_result, $key.'.total', $value['tax_due']);
+            }
+            $this->notify('CBT Enabled: Penalty, removed!');
+        } else {
+            foreach ($this->compute_quarter_result as $key => $value) {
+                data_set($this->compute_quarter_result, $key.'.cbt', false);
+                data_set($this->compute_quarter_result, $key.'.total', $value['tax_due'] + $value['penalty']);
+            }
+            $this->notify('CBT Enabled: Penalty, added!'.$this->cbt_enabled);
+        }
+    }
+
+    public function removeSelectedPenalty($index_key)
+    {
+        foreach ($this->compute_quarter_result as $key => $value) {
+            if($key == $index_key){
+                data_set($this->compute_quarter_result, $key.'.cbt', !$value['cbt']);
+                data_set($this->compute_quarter_result, $key.'.total',
+                $value['cbt'] == true ? $value['tax_due'] + $value['penalty'] : $value['tax_due']);
+                $this->notify('Selected bracket, Removed!');
+            }
+        }
+    }
+
+    ## TOGGLE SELECT AMOUNT DUE
+    public function toggleBracket($index_key)
+    {
+        foreach ($this->compute_quarter_result as $key => $value) {
+            if($key == $index_key){
+                data_set($this->compute_quarter_result, $key.'.status', !$value['status']);
+                $this->notify('Selected bracket, Removed!');
             }
         }
     }
