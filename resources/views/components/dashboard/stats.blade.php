@@ -1,7 +1,8 @@
 <li class="relative flex col-span-1 rounded-md shadow-sm">
     <div
         class="flex items-center justify-center flex-shrink-0 w-16 text-sm font-medium text-white bg-blue-500 rounded-l-md">
-        <x-icon.folder-open class="flex-shrink-0 w-6 h-6 text-white" />
+        {{ $icon }}
+        {{-- <x-icon.folder-open class="flex-shrink-0 w-6 h-6 text-white" /> --}}
     </div>
     <div
         class="flex items-center justify-between flex-1 truncate bg-white border-t border-b border-r border-gray-200 rounded-r-md">

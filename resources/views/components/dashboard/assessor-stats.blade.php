@@ -3,6 +3,9 @@
     <ul role="list" class="grid grid-cols-1 gap-4 mt-3 sm:gap-6 sm:grid-cols-2 xl:grid-cols-4" x-max="1">
 
         <x-dashboard.stats>
+            <x-slot name="icon">
+                <x-icon.folder-open class="flex-shrink-0 w-6 h-6 text-white" />
+            </x-slot>
             <x-slot name="label">
                 <p class="font-medium text-gray-900">Assessment Roll</p>
                 <p class="text-gray-500">
