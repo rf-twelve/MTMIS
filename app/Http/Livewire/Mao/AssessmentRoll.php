@@ -9,6 +9,8 @@ use App\Http\Livewire\DataTable\WithBulkActions;
 use App\Http\Livewire\DataTable\WithCachedRows;
 use App\Models\AuditTrail;
 use App\Models\Doc;
+use App\Models\MaoAssmtRoll;
+use App\Models\MtoRptAccount;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -82,70 +84,6 @@ class AssessmentRoll extends Component
         ]);
     }
 
-    public function create()
-    {
-        return redirect(route('Create Document',[
-            'user_id' => Auth::user()->id,
-            'tn' => date('Y-md-hms').'-'.rand(1000,date('Y'))
-            ]));
-    }
-
-    public function edit($id){
-        $this->viewing = Doc::findOrFail($id);
-        // dd($this->viewing->dts_archives);
-        // $this->timeline = Activity::where('subject_id',$id)->orderBy('id')->get();
-        $this->useCachedRows();
-
-        // $this->setDataField($id, $this->viewing->refer_to);
-
-        $this->showTableGroup = false;
-        $this->showFormGroup = true;
-    }
-
-    public function openFile($id){
-        // $this->showFileImage = (DtsArchive::find($id))->image;
-        $this->showFormGroup = false;
-        $this->showFile = true;
-    }
-
-    public function closeFile(){
-        $this->showFormGroup = true;
-        $this->showFile = false;
-    }
-
-    public function addAction(){
-        // $this->showFormGroup = true;
-        // $this->showFile = false;
-        $this->showActionForm = true;
-    }
-
-    public function saveAction(){
-        $validated = $this->validate();
-        $validated['editing']['dts_doc_id'] = $this->viewing['id'];
-        // DtsAction::create($validated['editing']);
-        $this->showActionForm = false;
-        $this->notify('New Action has been added successfully!');
-        $this->edit($this->viewing['id']);
-    }
-
-
-    public function save()
-    {
-        $this->validate();
-
-        $data = is_array($this->viewing) ? $this->viewing : $this->viewing->toArray();
-
-        $this->editing->refer_to =  $data['refer_to'];
-        $this->editing->dts_doc_id =  $data['id'];
-
-        $this->editing->save();
-
-        $this->showTableGroup = true;
-        $this->showFormGroup = false;
-
-        $this->notify('Successfully save records.');
-    }
-
     public function print($id)
     {
         $dataArray = array(
@@ -195,48 +133,11 @@ class AssessmentRoll extends Component
         dd('export');
     }
 
-    public function importFile()
-    {
-
-        // $valid = $this->validate([
-        //     'imports.file' => 'file|mimes:xlsx', // 1MB Max
-        // ]);
-
-        // $getPath = $valid ? $this->imports['file'] : collect();
-
-        // $file_stored = SimpleExcelReader::create($getPath->path())
-        //     ->getRows()
-        //     ->each(function(array $data) {
-        //         DtsDoc::create([
-        //             'doc_no' => $data['DOCUMENT_NO'],
-        //             'date_received' => $data['DATE_RECEIVED'],
-        //             'received_by' => $data['RECEIVED_BY'],
-        //             'doc_origin' => $data['ORIGIN'],
-        //             'doc_nature' => $data['NATURE'],
-        //             'refer_to' => $data['NATURE'],
-        //             'for' => $data['FOR'],
-        //             'types' => $data['TYPE'],
-        //             'remarks' => $data['REMARKS'],
-        //             'encoder' => auth()->user()->fullname,
-        //             'editor' => auth()->user()->fullname,
-        //         ]);
-        //         $this->imports['count']++;
-        // });
-
-        // $this->showImportModal = false;
-
-        // $this->notify('You\'ve imported '.$this->imports['count'].' Records');
-
-        // $this->reset('imports');
-    }
-
     public function getRowsQueryProperty()
     {
 
-        return Doc::query()
-            ->with('audit_trails')
+        return MaoAssmtRoll::query()
             ->when($this->filters['search'], fn($query, $search) => $query->where($this->sortField, 'like','%'.$search.'%'))
-            // ->where('for', 'act')
             ->orderBy($this->sortField, $this->sortDirection);
     }
 
@@ -251,7 +152,7 @@ class AssessmentRoll extends Component
     {
         // dd($this->rows);
         return view('livewire.mao.assessment-roll',[
-            'docs' => $this->rows,
+            'assmt_rolls' => $this->rows,
             'offices' => Office::get(),
             'user_list' => User::get()->toArray(),
         ]);
