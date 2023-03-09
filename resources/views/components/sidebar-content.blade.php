@@ -88,6 +88,12 @@
                     <x-icon.folder-open class="flex-shrink-0 w-5 h-5 mr-1"/>
                 <span class="flex-1"> Assessment Roll </span></a>
             </div>
+            <div class="space-y-1" id="sub-menu-4">
+                <a href="{{ route('mao-reports',['user_id'=>Auth::user()->id]) }}"
+                    class="flex items-center w-full py-2 pr-2 text-sm font-medium text-blue-100 rounded-md group pl-11 hover:text-gray-900 hover:bg-gray-50">
+                    <x-icon.folder-open class="flex-shrink-0 w-5 h-5 mr-1"/>
+                <span class="flex-1"> Reports </span></a>
+            </div>
         </div>
 
         {{-- MUNICIPAL TREASURER OFFICE --}}

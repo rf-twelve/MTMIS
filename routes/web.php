@@ -10,6 +10,7 @@ use App\Http\Livewire\Dts\PrivacyPolicy;
 use App\Http\Livewire\Mao\AssessmentRoll;
 use App\Http\Livewire\Mao\AssessmentRollCreate;
 use App\Http\Livewire\Mao\AssessmentRollUpdate;
+use App\Http\Livewire\Mao\MaoReports;
 use App\Http\Livewire\Mto\AccountComputation;
 use App\Http\Livewire\Mto\AccountList;
 use App\Http\Livewire\Mto\AccountVerification;
@@ -34,6 +35,7 @@ use App\Http\Livewire\Rpt\Account;
 use App\Http\Livewire\Settings\ProfileSettings;
 use App\Http\Livewire\Settings\UsersManagement;
 use App\Http\Livewire\Settings\Users as UserSettings;
+use App\Models\MaoAssmtRoll;
 use App\Models\User;
 
 /*
@@ -79,6 +81,8 @@ Route::group(['prefix' => 'user',  'middleware' => 'auth'], function()
     Route::get('{user_id}/assessment-roll', AssessmentRoll::class)->name('assessment-roll');
     Route::get('{user_id}/assessment-roll-create', AssessmentRollCreate::class)->name('assessment-roll-create');
     Route::get('{user_id}/assessment-roll-update/{id}', AssessmentRollUpdate::class)->name('assessment-roll-update/{id}');
+    Route::get('{user_id}/mao-reports', MaoReports::class)->name('mao-reports');
+    Route::get('{user_id}/reports/assessment-roll-report', AssessmentRollReport::class)->name('reports/assessment-roll-report');
 
     ## TREASURER
     Route::get('{user_id}/account-list', AccountList::class)->name('account-list');
@@ -87,7 +91,6 @@ Route::group(['prefix' => 'user',  'middleware' => 'auth'], function()
     Route::get('{user_id}/collections', Collections::class)->name('collections');
     Route::get('{user_id}/ledger-entry/{id}', LedgerEntry::class)->name('ledger-entry');
     Route::get('{user_id}/mto-reports', MtoReports::class)->name('mto-reports');
-    Route::get('{user_id}/reports/assessment-roll-report', AssessmentRollReport::class)->name('reports/assessment-roll-report');
     Route::get('{user_id}/reports/collectible-report', CollectibleReport::class)->name('reports/collectible-report');
     Route::get('{user_id}/reports/collection-and-deposit-report', CollectionAndDepositReport::class)->name('reports/collection-and-deposit-report');
     Route::get('{user_id}/reports/delinquency-report', DelinquencyReport::class)->name('reports/delinquency-report');

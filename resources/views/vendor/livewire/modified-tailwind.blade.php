@@ -2,31 +2,10 @@
     @if ($paginator->hasPages())
     @php(isset($this->numberOfPaginatorsRendered[$paginator->getPageName()]) ? $this->numberOfPaginatorsRendered[$paginator->getPageName()]++ : $this->numberOfPaginatorsRendered[$paginator->getPageName()] = 1)
 
-    <nav class="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6" aria-label="Pagination">
-        <div class="hidden sm:block">
-            <p class="text-sm leading-5 text-gray-700">
-                <span>{!! __('Showing') !!}</span>
-                <span class="font-medium">{{ $paginator->firstItem() }}</span>
-                <span>{!! __('to') !!}</span>
-                <span class="font-medium">{{ $paginator->lastItem() }}</span>
-                <span>{!! __('of') !!}</span>
-                <span class="font-medium">{{ $paginator->total() }}</span>
-                <span>{!! __('results') !!}</span>
-            </p>
-        </div>
-
-        {{-- <div class="flex justify-between flex-1 sm:justify-end">
-            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                Previous
-            </a>
-            <a href="#" class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                Next
-            </a>
-        </div> --}}
-
-            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-end">
+    <nav class="flex items-center justify-between px-2" aria-label="Pagination">
+            <div class="flex items-center justify-start flex-1">
                 <div>
-                    <span class="relative z-0 inline-flex rounded-md shadow-sm">
+                    <span class="relative z-0 inline-flex shadow-sm">
                         <span>
                             {{-- Previous Page Link --}}
                             @if ($paginator->onFirstPage())
@@ -71,18 +50,18 @@
                         </span>
                     </span>
                 </div>
+                <div class="block pl-6">
+                    <p class="text-sm leading-5 text-gray-700">
+                        <span>{!! __('Showing') !!}</span>
+                        <span class="font-medium">{{ $paginator->firstItem() }}</span>
+                        <span>{!! __('to') !!}</span>
+                        <span class="font-medium">{{ $paginator->lastItem() }}</span>
+                        <span>{!! __('of') !!}</span>
+                        <span class="font-medium">{{ $paginator->total() }}</span>
+                        <span>{!! __('results') !!}</span>
+                    </p>
+                </div>
             </div>
-            {{-- <div>
-                <p class="text-sm leading-5 text-gray-700">
-                    <span>{!! __('Showing') !!}</span>
-                    <span class="font-medium">{{ $paginator->firstItem() }}</span>
-                    <span>{!! __('to') !!}</span>
-                    <span class="font-medium">{{ $paginator->lastItem() }}</span>
-                    <span>{!! __('of') !!}</span>
-                    <span class="font-medium">{{ $paginator->total() }}</span>
-                    <span>{!! __('results') !!}</span>
-                </p>
-            </div> --}}
         </nav>
     @endif
 </div>
