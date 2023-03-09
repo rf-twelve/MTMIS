@@ -66,7 +66,7 @@
             <a href="#"
                 class="flex items-center w-full py-2 pl-2 text-sm font-medium text-blue-700 bg-blue-200 rounded-md group">
                 <x-icon.home class="flex-shrink-0 w-6 h-6 mr-3" />
-                Dashboard
+                DASHBOARD
             </a>
         </div>
 
