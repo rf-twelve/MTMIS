@@ -32,20 +32,20 @@
                 </x-topbar-desktop>
 
                 <div class="px-4 mt-2 mb-6 sm:px-6 lg:px-8">
-                    <h2 class="text-xs italic font-medium tracking-wide text-gray-500 uppercase">REPORTS</h2>
+                    <h2 class="text-xs italic font-medium tracking-wide text-gray-500 uppercase">SETTINGS</h2>
                     <ul role="list" class="grid grid-cols-1 gap-4 mt-3 sm:gap-6 sm:grid-cols-2 xl:grid-cols-4" x-max="1">
 
                         <x-dashboard.stats>
                             <x-slot name="icon">
-                                <x-icon.report class="flex-shrink-0 w-6 h-6 text-white" />
+                                <x-icon.document class="flex-shrink-0 w-6 h-6 text-white" />
                             </x-slot>
                             <x-slot name="label">
-                                <p class="font-medium text-gray-900">Assessment Roll</p>
-                                <p class="font-medium text-gray-900">Report</p>
+                                <p class="font-medium text-gray-900">Form</p>
+                                <p class="font-medium text-gray-900">Setting</p>
                             </x-slot>
                             <x-slot name="content">
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('reports/assessment-roll-report',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
+                                    <a href="{{ route('settings/form-setting',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
                                         View
                                     </a>
                                 </div>
@@ -54,15 +54,15 @@
 
                         <x-dashboard.stats>
                             <x-slot name="icon">
-                                <x-icon.report class="flex-shrink-0 w-6 h-6 text-white" />
+                                <x-icon.document class="flex-shrink-0 w-6 h-6 text-white" />
                             </x-slot>
                             <x-slot name="label">
-                                <p class="font-medium text-gray-900">Collectible</p>
-                                <p class="font-medium text-gray-900">Report</p>
+                                <p class="font-medium text-gray-900">Locality</p>
+                                <p class="font-medium text-gray-900">Setting</p>
                             </x-slot>
                             <x-slot name="content">
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('reports/collectible-report',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
+                                    <a href="{{ route('settings/locality-setting',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
                                         View
                                     </a>
                                 </div>
@@ -71,37 +71,21 @@
 
                         <x-dashboard.stats>
                             <x-slot name="icon">
-                                <x-icon.report class="flex-shrink-0 w-6 h-6 text-white" />
+                                <x-icon.document class="flex-shrink-0 w-6 h-6 text-white" />
                             </x-slot>
                             <x-slot name="label">
-                                <p class="font-medium text-gray-900">Collection & </p>
-                                <p class="font-medium text-gray-900">Deposit Report</p>
+                                <p class="font-medium text-gray-900">Tax</p>
+                                <p class="font-medium text-gray-900">Setting</p>
                             </x-slot>
                             <x-slot name="content">
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('reports/collection-and-deposit-report',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
+                                    <a href="{{ route('settings/tax-setting',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
                                         View
                                     </a>
                                 </div>
                             </x-slot>
                         </x-dashboard.stats>
 
-                        <x-dashboard.stats>
-                            <x-slot name="icon">
-                                <x-icon.report class="flex-shrink-0 w-6 h-6 text-white" />
-                            </x-slot>
-                            <x-slot name="label">
-                                <p class="font-medium text-gray-900">Delinquency</p>
-                                <p class="font-medium text-gray-900">Report</p>
-                            </x-slot>
-                            <x-slot name="content">
-                                <div class="py-1" role="none">
-                                    <a href="{{ route('reports/delinquency-report',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
-                                        View
-                                    </a>
-                                </div>
-                            </x-slot>
-                        </x-dashboard.stats>
 
                     </ul>
                 </div>

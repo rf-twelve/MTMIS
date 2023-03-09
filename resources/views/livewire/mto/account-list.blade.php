@@ -1,57 +1,27 @@
 <div class="min-h-full">
     <div class="px-2 pt-2 sm:px-4 lg:px-4">
-        <x-header.top-banner />
-
-        <!-- This example requires Tailwind CSS v2.0+ -->
-        <div class="lg:flex lg:items-center lg:justify-between">
-            <div class="flex-1 min-w-0">
-                <nav class="flex" aria-label="Breadcrumb">
-                    <ol role="list" class="flex items-center space-x-4">
-                      <li>
-                        <div>
-                          <a href="{{ route('user-dashboard',['user_id'=> auth()->user()->id]) }}" class="text-gray-400 hover:text-gray-500">
-                            <!-- Heroicon name: solid/home -->
-                            <x-icon.home class="flex-shrink-0 w-5 h-5"/>
-                            <span class="sr-only">Home</span>
-                          </a>
-                        </div>
-                      </li>
-
-                      <li>
-                        <div class="flex items-center">
-                          <svg class="flex-shrink-0 w-5 h-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                            <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
-                          </svg>
-                          <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Treasurer</a>
-                        </div>
-                      </li>
-
-                    </ol>
-                  </nav>
-
-                <h2 class="mt-2 text-lg font-bold leading-7 text-gray-900 sm:text-lg sm:truncate">
-                    Account List
-                </h2>
-                <div class="flex flex-col mt-1 sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
-
-                </div>
-            </div>
-            <div class="flex mt-2 lg:mt-0 lg:ml-4">
-
-
-                <div class="flex items-center text-sm text-gray-500">
-                    <!-- Heroicon name: solid/calendar -->
-                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd"
-                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                            clip-rule="evenodd" />
+        <x-topbar-desktop>
+            <li class="flex">
+                <div class="flex items-center">
+                    <svg class="flex-shrink-0 w-6 h-full text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                     </svg>
-                    {{ date('M d, Y') }}
+                    <a href="{{ route('user-dashboard',['user_id'=> auth()->user()->id]) }}" class="ml-4 text-sm font-medium text-white hover:text-blue-200">
+                        Dashboard
+                    </a>
                 </div>
-            </div>
-        </div>
-
+            </li>
+            <li class="flex">
+                <div class="flex items-center">
+                    <svg class="flex-shrink-0 w-6 h-full text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="#" class="ml-4 text-sm font-medium text-white hover:text-blue-200">
+                        Assessment Roll
+                    </a>
+                </div>
+            </li>
+        </x-topbar-desktop>
 
         <div class="grid grid-cols-1 gap-4 mt-4 lg:grid-cols-2">
             <div class="flex items-center flex-1">
