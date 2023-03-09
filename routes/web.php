@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Route;
 
 ## Rpt
 use App\Http\Livewire\Rpt\Account;
+use App\Http\Livewire\Settings\CompanyProfile;
 use App\Http\Livewire\Settings\ProfileSettings;
 use App\Http\Livewire\Settings\UsersManagement;
 use App\Http\Livewire\Settings\Users as UserSettings;
@@ -100,8 +101,9 @@ Route::group(['prefix' => 'user',  'middleware' => 'auth'], function()
     Route::get('{user_id}/settings/tax-setting', TaxSetting::class)->name('settings/tax-setting');
 
     ## USER MANAGEMENT
-    Route::get('{user_id}/profile-settings', ProfileSettings::class)->name('Profile Settings');
-    Route::get('{user_id}/user-management', UsersManagement::class)->name('Users Management');
+    Route::get('{user_id}/profile-settings', ProfileSettings::class)->name('profile-settings');
+    Route::get('{user_id}/company-profile', CompanyProfile::class)->name('company-profile');
+    Route::get('{user_id}/user-management', UsersManagement::class)->name('user-management');
 });
 
 Route::get('/home', Register::class)->name('Register');

@@ -31,7 +31,7 @@
             role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button" tabindex="-1">
             <div class="py-1" role="none">
                 <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                <a onclick="window.open('{{ route('Profile Settings',['user_id'=>Auth::user()->id]) }}','_blank')" href="#"
+                <a onclick="window.open('{{ route('profile-settings',['user_id'=>Auth::user()->id]) }}','_blank')" href="#"
                     class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                     id="options-menu-item-0">View profile</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
@@ -187,15 +187,29 @@
             <!-- Expandable link section, show/hide based on state. -->
             <div class="space-y-1" id="sub-menu-4">
 
-                <a href="{{ route('Users Management',['user_id'=>Auth::user()->id]) }}"
+                <a href="{{ route('user-management',['user_id'=>Auth::user()->id]) }}"
                     class="flex items-center w-full py-2 pr-2 text-sm font-medium text-blue-100 rounded-md group pl-11 hover:text-gray-900 hover:bg-gray-50">
                     <x-icon.users class="flex-shrink-0 w-5 h-5 mr-1"/>
                 <span class="flex-1"> User Management </span></a>
 
             </div>
+            <div class="space-y-1" id="sub-menu-4">
+
+                <a href="{{ route('company-profile',['user_id'=>Auth::user()->id]) }}"
+                    class="flex items-center w-full py-2 pr-2 text-sm font-medium text-blue-100 rounded-md group pl-11 hover:text-gray-900 hover:bg-gray-50">
+                    <x-icon.users class="flex-shrink-0 w-5 h-5 mr-1"/>
+                <span class="flex-1"> Company Profile </span></a>
+
+            </div>
         </div>
-{{--
-        <div class="mt-8">
+
+        <div class="mt-8 text-center bg-blue-100">
+            <!-- Secondary navigation -->
+            <h3 class="px-3 text-xs font-semibold tracking-wider text-gray-500 uppercase"
+                id="desktop-teams-headline">ZELEKTRONICA 2023 v2</h3>
+
+        </div>
+        {{-- <div class="mt-8">
             <!-- Secondary navigation -->
             <h3 class="px-3 text-xs font-semibold tracking-wider text-gray-500 uppercase"
                 id="desktop-teams-headline">CONNECTION STATUS</h3>
