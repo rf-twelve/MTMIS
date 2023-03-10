@@ -35,11 +35,13 @@
         <article>
         <!-- Profile header -->
         <div>
+            {{-- Company Background Image --}}
             <div>
-            <img class="object-cover w-full h-32 lg:h-48" src="{{ asset('img\users\users-mgt.jpg') }}" alt="user managment background">
+            <img class="object-cover w-full h-32 lg:h-48" src="{{ asset('img\users\users-mgt.jpg') }}" alt="company background">
             </div>
             <div class="max-w-5xl px-4 mx-auto sm:px-6 lg:px-8">
             <div class="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
+                {{-- Company Logo --}}
                 <div class="flex">
                 <img class="w-24 h-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32" src="{{ asset('img\users\avatar.png') }}" alt="user profile">
                 </div>
@@ -154,58 +156,6 @@
 
         </article>
     </div>
-    <aside class="flex-shrink-0 border-r border-gray-200 xl:order-first xl:flex xl:flex-col w-96">
-        <div class="px-6 pt-6 pb-4">
-        <h2 class="text-lg font-medium text-gray-900">Directory</h2>
-        <p class="mt-1 text-sm text-gray-600">Search directory of {{ $all_users->count() }} employees</p>
-        <form class="flex mt-6 space-x-4" action="#">
-            <div class="flex-1 min-w-0">
-            <label for="search" class="sr-only">Search</label>
-            <div class="relative rounded-md shadow-sm">
-                <div class="flex">
-                    <div class="relative flex items-stretch flex-grow focus-within:z-10">
-                        <x-form.input-text wire:model='search' type="search" placeholder="Enter keywords..." class="pl-2 border rounded-none rounded-l-md"/>
-                    </div>
-                    <x-form.button class="relative inline-flex items-center -ml-px space-x-2 border-gray-300 rounded-none rounded-r-md bg-gray-50 hover:bg-gray-100">
-                        <x-icon.search class="w-6 h-6" /><span></span>
-                    </x-form.button>
-                </div>
-            </div>
-            </div>
-        </form>
-        </div>
-        <!-- Directory list -->
-        <nav class="flex-1 min-h-0 overflow-y-auto" aria-label="Directory">
-        <div class="relative">
-            <div class="sticky top-0 z-10 px-6 py-1 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
-            <h3>LIST OF USERS</h3>
-            </div>
-            <ul role="list" class="relative z-0 divide-y divide-gray-200">
-                @forelse ($user_list as $list)
-                    <li wire:click.defer="selectedUser({{ $list->id }})">
-                        <div class="relative flex items-center px-6 py-5 space-x-3 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500">
-                        <div class="flex-shrink-0">
-                            <img class="w-10 h-10 rounded-full" src="{{ asset('img\users\avatar.png') }}" alt="">
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <a href="#" class="focus:outline-none">
-                            <!-- Extend touch target to entire panel -->
-                            <span class="absolute inset-0" aria-hidden="true"></span>
-                            <p class="text-sm font-medium text-gray-900">{{ $list->fullname }}</p>
-                            <p class="text-sm text-gray-500 truncate">{{ $list->username }}</p>
-                            </a>
-                        </div>
-                        </div>
-                    </li>
-                @empty
-                    <li class="pt-2 text-center">Record not found!</li>
-                @endforelse
-
-            </ul>
-        </div>
-
-        </nav>
-    </aside>
 
     {{-- ADD ROLES MODAL --}}
     <x-modal.dialog wire:model="addRoleModal" maxWidth="sm">

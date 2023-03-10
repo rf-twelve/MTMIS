@@ -1,27 +1,27 @@
 <div class="min-h-full">
     <div class="px-2 pt-2 sm:px-4 lg:px-4">
-        <x-header.navbar>
-            <!-- This example requires Tailwind CSS v2.0+ -->
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol role="list" class="flex items-center space-x-4">
-                <li>
-                    <div>
-                    <a href="{{ route('user-dashboard',['user_id'=>Auth::user()->id]) }}" class="text-gray-400 hover:text-gray-700">
-                    <x-icon.home class="flex-shrink-0 h-5 w-5"/>
-                    <span class="sr-only">Home</span>
+        <x-topbar-desktop>
+            <li class="flex">
+                <div class="flex items-center">
+                    <svg class="flex-shrink-0 w-6 h-full text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="{{ route('user-dashboard',['user_id'=> auth()->user()->id]) }}" class="ml-4 text-sm font-medium text-white hover:text-blue-200">
+                        Dashboard
                     </a>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="flex items-center">
-                    <x-icon.chevron-right class="flex-shrink-0 h-5 w-5 text-gray-400"/>
-                    <a href="{{ route('collections',['user_id'=>Auth::user()->id]) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Collections</a>
-                    </div>
-                </li>
-                </ol>
-            </nav>
-        </x-header.navbar>
+                </div>
+            </li>
+            <li class="flex">
+                <div class="flex items-center">
+                    <svg class="flex-shrink-0 w-6 h-full text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"aria-hidden="true">
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a href="#" class="ml-4 text-sm font-medium text-white hover:text-blue-200">
+                        Account List
+                    </a>
+                </div>
+            </li>
+        </x-topbar-desktop>
 
         <div class="grid grid-cols-1 gap-4 mt-4 lg:grid-cols-2">
             <div class="flex items-center flex-1">

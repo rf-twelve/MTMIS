@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Settings;
 
 use App\Http\Livewire\Traits\WithPermissionsTrait;
 use App\Http\Livewire\Traits\WithRolesTrait;
+use App\Models\Company;
 use App\Models\User;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
@@ -11,7 +12,18 @@ use Spatie\Permission\Models\Role;
 
 class CompanyProfile extends Component
 {
-    use WithRolesTrait, WithPermissionsTrait;
+    // use WithRolesTrait, WithPermissionsTrait;
+
+    public $name;
+    public $address;
+    public $province;
+    public $system_title;
+    public $logo;
+    public $bg_login;
+    public $copyright;
+    public $version;
+
+    public $company;
 
     public $selected_user;
     public $all_users;
@@ -27,6 +39,7 @@ class CompanyProfile extends Component
     public $permission_name;
     public $action_array = ['create','read','update','delete'];
 
+
     public function render()
     {
         // dd(Role::get());
@@ -38,12 +51,7 @@ class CompanyProfile extends Component
     }
 
     public function mount(){
-        $this->all_users =  User::get();
-        $this->addRoleModal = false;
-        $this->addPermissionModal = false;
-        $this->assign_role_confirmation = false;
-        $this->assign_permission_confirmation = false;
-        $this->selectedUser(($this->all_users->first())['id']);
+        $this->company = Company::find(1);
     }
 
     public function updatedSearch(){

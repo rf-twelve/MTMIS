@@ -36,7 +36,7 @@
               </div>
 
               <div @click.away="userDropdown=false" x-show="userDropdown" class="absolute z-10 right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                <a onclick="window.open('{{ route('Profile Settings',['user_id'=>Auth::user()->id]) }}','_blank')" href="#"
+                <a onclick="window.open('{{ route('profile-settings',['user_id'=>Auth::user()->id]) }}','_blank')" href="#"
                     class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                     id="options-menu-item-0">View profile</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
