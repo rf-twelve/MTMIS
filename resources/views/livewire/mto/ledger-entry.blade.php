@@ -1,6 +1,35 @@
 <div class="min-h-full">
     <div class="flex flex-col min-h-0">
         <!-- Top nav-->
+        <nav class="flex bg-blue-500 border-b border-gray-200" aria-label="Breadcrumb">
+            <ol role="list" class="justify-between flex w-full max-w-screen-xl px-4 mx-auto space-x-4 sm:px-6 lg:px-8">
+
+                <span class="flex space-x-2 py-2">
+                    <a href="{{ route('account-list',['user_id'=>auth()->user()->id]) }}"
+                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 hover:text-white hover:bg-blue-600 bg-white rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
+                        <x-icon.arrow-curve-left class="mr-2.5 h-5 w-5" />
+                        <span>Back</span>
+                    </a>
+                    <a wire:click="verifyAndUpdate()" href="#"
+                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white hover:bg-blue-600 rounded-xl hover:text-white focus:z-10 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600">
+                        <x-icon.circle-check class="mr-1 h-5 w-5" />
+                        <span>Update</span>
+                    </a>
+                </span>
+                <div class="flex">
+                    <label for="search" class="sr-only">Search</label>
+                    <div class="relative py-2">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <x-icon.search class="w-5 h-5 text-gray-500" />
+                        </div>
+                        <x-input wire:model.debounce.500ms="assessment_roll_search"
+                            class="block w-full py-2 pl-10 pr-3 leading-5 placeholder-gray-500 bg-white border border-gray-300 rounded-xl focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Search" placeholder="Search Assessment Roll..." type="search" />
+                    </div>
+                </div>
+
+            </ol>
+        </nav>
 
         <!-- Bottom section -->
         <div class="flex-1 min-h-0 overflow-hidden">
@@ -10,22 +39,14 @@
                 <div class="order-first xl:block xl:flex-shrink-0">
                     <div class="relative flex flex-col h-full bg-gray-100 border-r border-gray-200 w-96">
                         <div class="flex-shrink-0">
-                            <div class="flex flex-col justify-center h-16 px-6 bg-white">
-                                <div class="flex items-baseline space-x-3">
-                                    <h2 class="text-lg font-medium text-gray-900">PIN:</h2>
-                                    <p class="text-sm font-medium text-gray-500">{{ $rpt_pin }}</p>
-                                </div>
-                            </div>
-                            <div
-                                class="flex px-6 py-2 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                            <div class="flex px-6 py-2 text-sm font-medium bg-blue-600 text-white border">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                 </svg>
                                 <span class="pl-2">ACCOUNT DETAILS</span>
-                                <a href="#" wire:click="editAccountForm()" class="flex ml-3 text-indigo-600 hover:text-indigo-900">
+                                <a href="#" wire:click="editAccountForm()" class="flex ml-3 text-white hover:text-blue-300">
                                     <x-icon.edit class="w-4 h-4" /><span class="text-xs">Edit</span>
                                 </a>
-
                             </div>
                         </div>
                         <nav class="flex-1 min-h-0 overflow-y-auto">
@@ -130,83 +151,17 @@
 
 
                 <section aria-labelledby="message-heading" class="flex flex-col flex-1 h-full min-w-0 overflow-hidden xl:order-last">
-                    <!-- Top section -->
-                    <div class="flex-shrink-0 bg-white border-b border-gray-200">
-                        <!-- Toolbar-->
-                        <div class="flex flex-col justify-center h-16">
-                            <div class="px-4 bg-gray-300 sm:px-6 lg:px-8">
-                                <div class="flex justify-between py-3">
-                                    <!-- Left buttons -->
-                                    <div>
-                                        <span
-                                            class="relative inline-flex rounded-md shadow-sm sm:space-x-3 sm:shadow-none">
-                                            <span class="inline-flex space-x-2">
-                                                <a href="{{ route('account-list',['user_id'=>auth()->user()->id]) }}"
-                                                    class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white rounded-xl hover:bg-gray-50 focus:z-10 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600">
-                                                    <x-icon.arrow-curve-left class="mr-1 h-5 w-5 text-gray-400" />
-                                                    <span>Back</span>
-                                                </a>
-                                                <a wire:click="verifyAndUpdate()" href="#"
-                                                    class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white rounded-xl hover:bg-gray-50 focus:z-10 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600">
-                                                    <x-icon.circle-check class="mr-1 h-5 w-5 text-gray-400" />
-                                                    <span>Update</span>
-                                                </a>
-                                                {{-- <x-dropdown class="px-1 border border-gray-300 rounded-sm" label="Options">
-                                                    <x-dropdown.item wire:click="$toggle('showDeleteSelectedRecordModal')"
-                                                        type="button" class="flex items-center space-x-2 rounded-md">
-                                                        <x-icon.trash class="w-5 h-5" /> <span>Delete</span>
-                                                    </x-dropdown.item>
-
-                                                    <x-dropdown.item wire:click="edit" type="button"
-                                                        class="flex items-center space-x-2 rounded-md">
-                                                        <x-icon.edit class="w-5 h-5" /> <span>Edit</span>
-                                                    </x-dropdown.item>
-
-                                                    <x-dropdown.item wire:click="receive" type="button"
-                                                        class="flex items-center space-x-2 rounded-md">
-                                                        <x-icon.arrow-down-on-square class="w-5 h-5" /> <span>Receive</span>
-                                                    </x-dropdown.item>
-
-                                                    <x-dropdown.item wire:click="release" type="button"
-                                                        class="flex items-center space-x-2 rounded-md">
-                                                        <x-icon.arrow-up-on-square class="w-5 h-5" /> <span>Release</span>
-                                                    </x-dropdown.item>
-
-                                                    <x-dropdown.item wire:click="terminal" type="button"
-                                                        class="flex items-center space-x-2 rounded-md">
-                                                        <x-icon.terminal class="w-5 h-5" /> <span>Terminal</span>
-                                                    </x-dropdown.item>
-
-                                                    <x-dropdown.item wire:click="transfer" type="button"
-                                                        class="flex items-center space-x-2 rounded-md">
-                                                        <x-icon.arrows-right-left class="w-5 h-5" /> <span>Transfer</span>
-                                                    </x-dropdown.item>
-
-                                                    <x-dropdown.item wire:click="unlock" type="button"
-                                                        class="flex items-center space-x-2 rounded-md">
-                                                        <x-icon.unlock class="w-5 h-5" /> <span>Unlock</span>
-                                                    </x-dropdown.item>
-
-                                                </x-dropdown> --}}
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Document Details -->
                     <div class="flex-1 overflow-y-auto lg:block">
                         <div class="min-h-screen pb-6 bg-white shadow">
                             <div class="sm:items-baseline sm:justify-between">
 
-                                <div class="flex px-6 py-2 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                <div class="flex px-6 py-2 text-sm font-medium border bg-blue-600 text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
                                     <span class="pl-2">ASSESSED VALUES</span>
-                                    <a href="#" wire:click="createAssessedValue()" class="flex ml-3 text-indigo-600 hover:text-indigo-900">
+                                    <a href="#" wire:click="createAssessedValue()" class="flex ml-3 text-white hover:text-blue-300">
                                         <x-icon.plus class="w-4 h-4" /><span class="text-xs">New</span>
                                     </a>
                                 </div>
@@ -255,12 +210,12 @@
                                     </div>
                                 </div>
 
-                                <div class="flex px-6 py-2 mt-4 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                <div class="flex px-6 py-2 mt-4 text-sm font-medium bg-blue-600 text-white border">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
                                     <span class="pl-2">PAYMENT RECORDS</span>
-                                    <a href="#" wire:click="createPaymentRecord" class="flex ml-3 text-indigo-600 hover:text-indigo-900">
+                                    <a href="#" wire:click="createPaymentRecord" class="flex ml-3 text-white hover:text-blue-300">
                                         <x-icon.plus class="w-4 h-4" /><span class="text-xs">New</span>
                                     </a>
                                 </div>

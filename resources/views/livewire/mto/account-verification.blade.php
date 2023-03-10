@@ -1,5 +1,36 @@
 <div class="min-h-full">
     <div class="flex flex-col min-h-0">
+
+        <nav class="flex bg-blue-500 border-b border-gray-200" aria-label="Breadcrumb">
+            <ol role="list" class="justify-between flex w-full max-w-screen-xl px-4 mx-auto space-x-4 sm:px-6 lg:px-8">
+
+                <span class="flex space-x-2 py-2">
+                    <a href="{{ route('account-list',['user_id'=>auth()->user()->id]) }}"
+                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 hover:text-white hover:bg-blue-500 bg-white rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
+                        <x-icon.arrow-curve-left class="mr-2.5 h-5 w-5" />
+                        <span>Back</span>
+                    </a>
+                    <a wire:click="verifyAndSave()" href="#"
+                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 hover:text-white hover:bg-blue-500 bg-white rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
+                        <x-icon.verified class="mr-2.5 h-5 w-5" />
+                        <span>Verify & Save</span>
+                    </a>
+                </span>
+                <div class="flex">
+                    <label for="search" class="sr-only">Search</label>
+                    <div class="relative py-2">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <x-icon.search class="w-5 h-5 text-gray-500" />
+                        </div>
+                        <x-input wire:model.debounce.500ms="assessment_roll_search"
+                            class="block w-full py-2 pl-10 pr-3 leading-5 placeholder-gray-500 bg-white border border-gray-300 rounded-xl focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Search" placeholder="Search Assessment Roll..." type="search" />
+                    </div>
+                </div>
+
+            </ol>
+        </nav>
+
         <!-- Top nav-->
 
         <!-- Bottom section -->
@@ -8,36 +39,10 @@
             <main class="flex-1 min-w-0 border-t border-gray-200 bg-gray-100 xl:flex">
 
                 <div class="order-first xl:block xl:flex-shrink-0">
-                    <div class="relative flex flex-col h-full bg-gray-100 border-r border-gray-200 w-96">
+                    <div class="relative flex flex-col h-full border-gray-200 w-96">
                         <div class="flex-shrink-0">
-                            <div class="flex-shrink-0 bg-gray-300">
-                                <!-- Toolbar-->
-                                <div class="flex flex-col justify-center h-16">
-                                    <div class="px-4 bg-gray-300 sm:px-6 lg:px-8">
-                                        <div class="flex justify-between py-3">
-                                            <!-- Left buttons -->
-                                            <div>
-                                                <span class="relative inline-flex rounded-md shadow-sm sm:space-x-3 sm:shadow-none">
-                                                    <span class="inline-flex space-x-2">
-                                                        <a href="{{ route('account-list',['user_id'=>auth()->user()->id]) }}"
-                                                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 hover:text-white hover:bg-blue-500 bg-white rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
-                                                            <x-icon.arrow-curve-left class="mr-2.5 h-5 w-5" />
-                                                            <span>Back</span>
-                                                        </a>
-                                                        <a wire:click="verifyAndSave()" href="#"
-                                                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 hover:text-white hover:bg-blue-500 bg-white rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
-                                                            <x-icon.verified class="mr-2.5 h-5 w-5" />
-                                                            <span>Verify & Save</span>
-                                                        </a>
-                                                    </span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div
-                                class="flex px-6 py-2 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                class="flex px-6 py-2 text-sm font-medium border-t border border-gray-200 bg-blue-600 text-white">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                 </svg>
@@ -181,21 +186,9 @@
                 </div>
 
                 <div class="order-first xl:block xl:flex-shrink-0">
-                    <div class="relative flex flex-col h-full bg-gray-200 border-r border-gray-200 w-96">
+                    <div class="relative flex flex-col h-full bg-gray-200 border-gray-200 w-96">
                         <div class="flex-shrink-0">
-                            <div class="flex flex-col justify-center h-16 px-6 bg-gray-300">
-                                <label for="search" class="sr-only">Search</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <x-icon.search class="w-5 h-5 text-gray-500" />
-                                    </div>
-                                    <x-input wire:model.debounce.500ms="assessment_roll_search"
-                                        class="block w-full py-2 pl-10 pr-3 leading-5 placeholder-gray-500 bg-white border border-gray-300 rounded-xl focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                        placeholder="Search" placeholder="Search Assessment Roll..." type="search" />
-                                </div>
-                            </div>
-                            <div
-                                class="flex px-6 py-2 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                            <div class="flex px-6 py-2 text-sm font-medium border border-gray-200 bg-blue-600 text-white">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                 </svg>
@@ -208,7 +201,7 @@
                         </div>
                         <nav class="flex-1 min-h-0 overflow-y-auto">
                             <section aria-labelledby="timeline-title" class="lg:col-start-3 lg:col-span-1">
-                                    <!-- ACCOUNT DETAILS -->
+                                    <!-- ASSESSMENT ROLL DETAILS -->
                                 <div class="px-2 border-t border-gray-200 text-md sm:p-0 pr-4">
                                     <dl class="sm:divide-y sm:divide-gray-200">
                                         <div class="h-12 py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
@@ -310,15 +303,6 @@
 
 
                 <section aria-labelledby="message-heading" class="flex bg-gray-100 flex-col flex-1 h-full min-w-0 overflow-hidden xl:order-last">
-                    <!-- Top section -->
-                    <div class="flex-shrink-0 bg-gray-300 border-b border-gray-100">
-                        <!-- Toolbar-->
-                        <div class="flex flex-col justify-center h-16">
-                            <div class="px-4 sm:px-6 lg:px-8">
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Document Details -->
                     <div class="flex-1 overflow-y-auto lg:block max-h-screen">
                         <div class="min-h-screen pb-6 shadow">
@@ -326,7 +310,7 @@
 
                                 {{-- ASSESSMENT ROLL TABLE --}}
                                 <div class="{{ !empty($assessment_roll_search) ? '': 'sr-only'}}">
-                                <div class="flex px-6 py-2 mt-4 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                <div class="flex px-6 py-2 text-sm font-medium border border-gray-200 bg-blue-600 text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
@@ -381,7 +365,7 @@
                                 </div>
 
                                 {{-- ASSESSED VALUE TABLE --}}
-                                <div class="flex px-6 py-2 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                <div class="flex px-6 py-2 text-sm font-medium border bg-blue-600 text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
@@ -440,7 +424,7 @@
                                 </div>
 
                                 {{-- PAYMENT RECORDS TABLE --}}
-                                <div class="flex px-6 py-2 mt-4 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                <div class="flex px-6 py-2 mt-4 text-sm font-medium border bg-blue-600 text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>

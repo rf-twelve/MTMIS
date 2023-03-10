@@ -17,7 +17,7 @@
                         <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                     </svg>
                     <a href="#" class="ml-4 text-sm font-medium text-white hover:text-blue-200">
-                        Account List
+                        Collections
                     </a>
                 </div>
             </li>
