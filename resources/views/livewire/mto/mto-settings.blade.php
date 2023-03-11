@@ -40,6 +40,23 @@
                                 <x-icon.document class="flex-shrink-0 w-6 h-6 text-white" />
                             </x-slot>
                             <x-slot name="label">
+                                <p class="font-medium text-gray-900">Booklet</p>
+                                <p class="font-medium text-gray-900">Setting</p>
+                            </x-slot>
+                            <x-slot name="content">
+                                <div class="py-1" role="none">
+                                    <a href="{{ route('settings/booklet-setting',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
+                                        View
+                                    </a>
+                                </div>
+                            </x-slot>
+                        </x-dashboard.stats>
+
+                        <x-dashboard.stats>
+                            <x-slot name="icon">
+                                <x-icon.document class="flex-shrink-0 w-6 h-6 text-white" />
+                            </x-slot>
+                            <x-slot name="label">
                                 <p class="font-medium text-gray-900">Form</p>
                                 <p class="font-medium text-gray-900">Setting</p>
                             </x-slot>

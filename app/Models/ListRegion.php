@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ListRegion extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+    protected $casts = ['id' => 'integer'];
 }

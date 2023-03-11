@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class ListMunicity extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+    protected $casts = ['id' => 'integer'];
 }

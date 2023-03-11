@@ -92,10 +92,11 @@ Route::group(['prefix' => 'user',  'middleware' => 'auth'], function()
     Route::get('{user_id}/collections', Collections::class)->name('collections');
     Route::get('{user_id}/ledger-entry/{id}', LedgerEntry::class)->name('ledger-entry');
     Route::get('{user_id}/mto-reports', MtoReports::class)->name('mto-reports');
+    Route::get('{user_id}/mto-settings', MtoSettings::class)->name('mto-settings');
     Route::get('{user_id}/reports/collectible-report', CollectibleReport::class)->name('reports/collectible-report');
     Route::get('{user_id}/reports/collection-and-deposit-report', CollectionAndDepositReport::class)->name('reports/collection-and-deposit-report');
     Route::get('{user_id}/reports/delinquency-report', DelinquencyReport::class)->name('reports/delinquency-report');
-    Route::get('{user_id}/mto-settings', MtoSettings::class)->name('mto-settings');
+    Route::get('{user_id}/settings/booklet-setting', BookletSetting::class)->name('settings/booklet-setting');
     Route::get('{user_id}/settings/form-setting', FormSetting::class)->name('settings/form-setting');
     Route::get('{user_id}/settings/locality-setting', LocalitySetting::class)->name('settings/locality-setting');
     Route::get('{user_id}/settings/tax-setting', TaxSetting::class)->name('settings/tax-setting');
