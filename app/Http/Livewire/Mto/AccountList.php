@@ -43,6 +43,7 @@ class AccountList extends Component
     ];
     public $filters = [
         'search' => '',
+        'perpage' => '',
         'status' => '',
         'amount-min' => null,
         'amount-max' => null,
