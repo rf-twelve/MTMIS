@@ -13,6 +13,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+    const ACTIONS = ['access','create','read','update','delete'];
+
+
     /**
      * The attributes that are mass assignable.
      *
