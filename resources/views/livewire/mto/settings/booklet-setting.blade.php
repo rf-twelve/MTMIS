@@ -7,20 +7,20 @@
                 <a href="/components" class="flex-none text-gray-900">
                     <span class="sr-only">Logo</span>
                 </a>
-                <p class="hidden lg:block text-sm ml-6 border-l border-gray-200 pl-6">
+                <p class="hidden pl-6 ml-6 text-sm border-l border-gray-200 lg:block">
                     <span class="sr-only">Description</span>
 
                 </p>
-                <div class="ml-auto flex items-center">
+                <div class="flex items-center ml-auto">
                     <a href="/components" class="hidden sm:block hover:text-gray-900">Components</a>
-                    <a href="/documentation" class="hidden sm:block ml-6 mr-2 hover:text-gray-900">Documentation</a>
+                    <a href="/documentation" class="hidden ml-6 mr-2 sm:block hover:text-gray-900">Documentation</a>
 
                     <div x-data="{ open: false }" x-init="window.addEventListener('focus', event => { if (open & amp; & amp; !$el.contains(event.target)) open = false }, true)" @click.away="open = false"
                         @keydown.escape="open = false;$refs.toggle.focus()"
                         class="relative sm:border-l -mr-1.5 sm:ml-2 sm:mr-0 sm:pl-6 border-gray-200">
                         <button type="button" x-ref="toggle" @click="open = !open" :aria-expanded="open"
-                            class="font-medium flex items-center">
-                            <span class="hidden sm:flex items-center">
+                            class="flex items-center font-medium">
+                            <span class="items-center hidden sm:flex">
                                 Account
                                 <svg aria-hidden="true" width="8" height="6" fill="none"
                                     class="ml-2.5 text-gray-400">
@@ -28,7 +28,7 @@
                                         stroke-linecap="round" stroke-linejoin="round"></path>
                                 </svg>
                             </span>
-                            <span class="flex sm:hidden -my-1 w-8 h-8 rounded-lg items-center justify-center">
+                            <span class="flex items-center justify-center w-8 h-8 -my-1 rounded-lg sm:hidden">
                                 <svg aria-hidden="true" width="20" height="20" fill="none"
                                     class="text-gray-900">
                                     <path d="M3.75 4.75h12.5M3.75 9.75h12.5M3.75 14.75h12.5" stroke="currentColor"
@@ -120,8 +120,18 @@
                         </a>
                     </div>
                 </li>
+                <li class="flex">
+                    <div class="flex items-center">
+                        <svg class="flex-shrink-0 w-6 h-full text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"aria-hidden="true">
+                            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                        </svg>
+                        <a href="#" class="ml-4 text-sm font-medium text-white hover:text-blue-200">
+                            Booklets
+                        </a>
+                    </div>
+                </li>
             </x-topbar-desktop>
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="sm:flex">
                 <div class="flex items-center flex-1 my-2">
                     <div class="w-full lg:max-w-xs">
@@ -139,7 +149,7 @@
                 <div class="flex justify-between px-2 my-2 space-x-2">
                     <div>
                         <x-button wire:click="toggleCreateRecordModal()"
-                            class="flex w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-xl shadow-sm appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            class="flex w-full px-3 py-2 placeholder-gray-400 border border-gray-300 shadow-sm appearance-none rounded-xl focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <x-icon.plus class="w-5 font-light" /> <p>Create</p>
                         </x-button>
                     </div>
@@ -172,39 +182,39 @@
                 </div>
             </div>
             <div class="sm:px-2 lg:px-4">
-                <div class="mt-4 flex flex-col">
+                <div class="flex flex-col mt-4">
                 <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-none sm:rounded-lg md:rounded-lg">
-                        <table class="divide-y min-w-full divide-gray-300 border">
-                            <thead class="bg-gray-50 text-sm font-semibold text-gray-900 text-center">
+                    <div class="overflow-hidden rounded-none shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg md:rounded-lg">
+                        <table class="min-w-full border divide-y divide-gray-300">
+                            <thead class="text-sm font-semibold text-center text-gray-900 bg-gray-50">
                                 <tr class="border border-gray-100">
-                                    <th scope="col" rowspan="3" class="border bg-blue-200 w-20">Form</th>
-                                    <th scope="col" colspan="3" class="border bg-blue-300">Beginning Balance</th>
-                                    <th scope="col" colspan="3" class="border bg-blue-500">Issued</th>
-                                    <th scope="col" colspan="3" class="border bg-blue-600">Ending Balance</th>
-                                    <th scope="col" rowspan="3" class="border bg-blue-700">Teller Name</th>
-                                    <th scope="col" rowspan="3" class="border bg-blue-200 w-20"></th>
+                                    <th scope="col" rowspan="3" class="w-20 bg-blue-200 border">Form</th>
+                                    <th scope="col" colspan="3" class="bg-blue-300 border">Beginning Balance</th>
+                                    <th scope="col" colspan="3" class="bg-blue-500 border">Issued</th>
+                                    <th scope="col" colspan="3" class="bg-blue-600 border">Ending Balance</th>
+                                    <th scope="col" rowspan="3" class="bg-blue-700 border">Teller Name</th>
+                                    <th scope="col" rowspan="3" class="w-20 bg-blue-200 border"></th>
                                 </tr>
                                 <tr class="border border-gray-100">
-                                    <th scope="col" rowspan="2" class="border bg-blue-300" >Qty.</th>
+                                    <th scope="col" rowspan="2" class="bg-blue-300 border" >Qty.</th>
                                     <th scope="col" colspan="2" class="bg-blue-300">Inclusive Serial No.</th>
-                                    <th scope="col" rowspan="2" class="border bg-blue-500" >Qty.</th>
+                                    <th scope="col" rowspan="2" class="bg-blue-500 border" >Qty.</th>
                                     <th scope="col" colspan="2" class="bg-blue-500">Inclusive Serial No.</th>
-                                    <th scope="col" rowspan="2" class="border bg-blue-600" >Qty.</th>
+                                    <th scope="col" rowspan="2" class="bg-blue-600 border" >Qty.</th>
                                     <th scope="col" colspan="2" class="bg-blue-600">Inclusive Serial No.</th>
                                 </tr>
                                 <tr class="border border-gray-100">
-                                    <th scope="col" class="border bg-blue-300 w-20">From</th>
-                                    <th scope="col" class="bg-blue-300 w-20">To</th>
-                                    <th scope="col" class="border bg-blue-500 w-20">From</th>
-                                    <th scope="col" class="bg-blue-500 w-20">To</th>
-                                    <th scope="col" class="border bg-blue-600 w-20">From</th>
-                                    <th scope="col" class="bg-blue-600 w-20">To</th>
+                                    <th scope="col" class="w-20 bg-blue-300 border">From</th>
+                                    <th scope="col" class="w-20 bg-blue-300">To</th>
+                                    <th scope="col" class="w-20 bg-blue-500 border">From</th>
+                                    <th scope="col" class="w-20 bg-blue-500">To</th>
+                                    <th scope="col" class="w-20 bg-blue-600 border">From</th>
+                                    <th scope="col" class="w-20 bg-blue-600">To</th>
                                 </tr>
 
                             </thead>
-                            <tbody class="bg-white text-gray-800 divide-y divide-gray-300 font-medium text-lg">
+                            <tbody class="text-lg font-medium text-gray-800 bg-white divide-y divide-gray-300">
                                 @forelse ($booklets as $item)
                                 <tr class="divide-x divide-gray-300">
                                     <td class="px-2 whitespace-nowrap">{{ $item->forms['name']}}</td>
@@ -218,7 +228,7 @@
                                     <td class="px-2 text-right">{{ $item['end_serial_fr'] }}</td>
                                     <td class="px-2 text-right">{{ $item['end_serial_to'] }}</td>
                                     <td class="px-2 text-right">{{ $item->users['fullname'] }}</td>
-                                    <td class="px-2 relative pl-3 text-right">
+                                    <td class="relative px-2 pl-3 text-right">
                                         <div class="flex">
                                             <x-button class="px-2 rounded-xl hover:text-white hover:bg-blue-500" wire:click="toggleEditRecordModal({{ $item['id'] }})">
                                                 <x-icon.edit class="w-4 h-4" /><span class="sr-only">Edit</span>

@@ -45,7 +45,7 @@
                             </x-slot>
                             <x-slot name="content">
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('reports/assessment-roll-report',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
+                                    <a href="{{ route('assessment-roll.reports',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
                                         View
                                     </a>
                                 </div>
@@ -62,7 +62,7 @@
                             </x-slot>
                             <x-slot name="content">
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('reports/collectible-report',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
+                                    <a href="{{ route('collectible.reports',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
                                         View
                                     </a>
                                 </div>
@@ -79,7 +79,7 @@
                             </x-slot>
                             <x-slot name="content">
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('reports/collection-and-deposit-report',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
+                                    <a href="{{ route('collection-and-deposit.reports',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
                                         View
                                     </a>
                                 </div>
@@ -96,7 +96,7 @@
                             </x-slot>
                             <x-slot name="content">
                                 <div class="py-1" role="none">
-                                    <a href="{{ route('reports/delinquency-report',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
+                                    <a href="{{ route('delinquency.reports',['user_id'=>Auth::user()->id]) }}" class="block px-4 py-2 text-sm text-gray-700">
                                         View
                                     </a>
                                 </div>

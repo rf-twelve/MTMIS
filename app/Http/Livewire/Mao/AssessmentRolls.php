@@ -16,7 +16,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Spatie\SimpleExcel\SimpleExcelReader;
 
-class AssessmentRoll extends Component
+class AssessmentRolls extends Component
 {
     use WithFileUploads, WithPerPagePagination, WithBulkActions, WithCachedRows;
 
@@ -151,7 +151,7 @@ class AssessmentRoll extends Component
     public function render()
     {
         // dd($this->rows);
-        return view('livewire.mao.assessment-roll',[
+        return view('livewire.mao.assessment-rolls',[
             'assmt_rolls' => $this->rows,
             'offices' => Office::get(),
             'user_list' => User::get()->toArray(),
