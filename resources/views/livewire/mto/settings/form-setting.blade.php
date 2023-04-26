@@ -51,10 +51,13 @@
 
                     <div class="flex flex-col overflow-hidden rounded-lg shadow-lg">
                         <div class="flex flex-col justify-between p-6 bg-white">
-                            <div>
+                            <div class="flex justify-between">
                                 <p class="text-sm font-medium text-indigo-600">
                                     TYPE OF FUNDS
                                 </p>
+                                <a wire:click='newFundModal()' href="#" class="flex px-2 py-1 text-xs font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-500 rounded-xl">
+                                    <x-icon.plus class="w-4 h-4" /> New
+                                </a>
                             </div>
                             <table class="min-w-full divide-y divide-gray-300">
                                 <thead class="bg-gray-50">
@@ -79,9 +82,12 @@
                                         <td class="px-2 py-2 text-sm text-gray-500 whitespace-nowrap">
                                             {{ $fund['is_active'] }}
                                         </td>
-                                        <td class="flex text-right">
-                                            <a wire:click='fundEditOpen()' href="#" class="px-2 py-1 my-1 text-sm font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-500 rounded-xl">
+                                        <td class="flex justify-end p-2">
+                                            <a wire:click='editFundModal({{ $fund->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-blue-500">
                                                 <x-icon.edit class="w-5 h-5" />
+                                            </a>
+                                            <a wire:click='deleteFundModal({{ $fund->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-red-500">
+                                                <x-icon.times class="w-5 h-5" />
                                             </a>
                                         </td>
                                     </tr>
@@ -96,10 +102,13 @@
 
                     <div class="flex flex-col overflow-hidden rounded-lg shadow-lg">
                         <div class="flex flex-col justify-between p-6 bg-white">
-                            <div>
+                            <div class="flex justify-between">
                                 <p class="text-sm font-medium text-indigo-600">
                                     TYPE OF FORMS
                                 </p>
+                                <a wire:click='newFormModal()' href="#" class="flex px-2 py-1 text-xs font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-500 rounded-xl">
+                                    <x-icon.plus class="w-4 h-4" /> New
+                                </a>
                             </div>
                             <table class="min-w-full divide-y divide-gray-300">
                                 <thead class="bg-gray-50">
@@ -124,9 +133,12 @@
                                         <td class="px-2 py-2 text-sm text-gray-500 whitespace-nowrap">
                                             {{ $form['is_active'] }}
                                         </td>
-                                        <td class="flex text-right">
-                                            <a wire:click='formEditOpen()' href="#" class="px-2 py-1 my-1 text-sm font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-500 rounded-xl">
+                                        <td class="flex justify-end p-2">
+                                            <a wire:click='editFormModal({{ $form->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-blue-500">
                                                 <x-icon.edit class="w-5 h-5" />
+                                            </a>
+                                            <a wire:click='deleteFormModal({{ $form->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-red-500">
+                                                <x-icon.times class="w-5 h-5" />
                                             </a>
                                         </td>
                                     </tr>
@@ -144,30 +156,52 @@
     </div>
 
 
-    <!-- Booklet Form -->
+    <!-- Form -->
     <div>
         <x-modal.dialog wire:model="showFormModal" maxWidth="sm">
             <x-slot name="title">
                 <div class="flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                    </svg>
-                    <span>BOOKLET FORM</span>
+                    <x-icon.form class="w-6 h-6" />
+                    <span>TYPE OF FORM</span>
                 </div>
             </x-slot>
 
             <x-slot name="content">
-                <x-input-group.booklet-fields />
+                <x-input-group.form-type />
             </x-slot>
 
             <x-slot name="footer">
-                <x-button wire:click="closeBookletRecord()" type="button"
+                <x-button wire:click="closeFormModal()" type="button"
                     class="text-white bg-gray-400 hover:bg-gray-500">
                     {{ __('Cancel') }}
                 </x-button>
-                <x-button wire:click="saveBookletRecord()" type="button" class="hover:bg-blue-500 hover:text-white">
+                <x-button wire:click="saveFormModal()" type="button" class="hover:bg-blue-500 hover:text-white">
+                    {{ __('Save') }}
+                </x-button>
+            </x-slot>
+        </x-modal.dialog>
+    </div>
+
+    <!-- Fund -->
+    <div>
+        <x-modal.dialog wire:model="showFundModal" maxWidth="sm">
+            <x-slot name="title">
+                <div class="flex">
+                    <x-icon.form class="w-6 h-6" />
+                    <span>TYPE OF FUND</span>
+                </div>
+            </x-slot>
+
+            <x-slot name="content">
+                <x-input-group.fund-type />
+            </x-slot>
+
+            <x-slot name="footer">
+                <x-button wire:click="closeFundModal()" type="button"
+                    class="text-white bg-gray-400 hover:bg-gray-500">
+                    {{ __('Cancel') }}
+                </x-button>
+                <x-button wire:click="saveFundModal()" type="button" class="hover:bg-blue-500 hover:text-white">
                     {{ __('Save') }}
                 </x-button>
             </x-slot>
@@ -176,8 +210,8 @@
 
     <!-- Delete Single Record Modal -->
     <div>
-        <form wire:submit.prevent="deleteSingleRecord">
-            <x-modal.confirmation wire:model.defer="showDeleteSingleRecordModal" selectedIcon="delete">
+        <form wire:submit.prevent="deleteFormRecord">
+            <x-modal.confirmation wire:model.defer="showDeleteFormRecordModal" selectedIcon="delete">
                 <x-slot name="title">Delete Record</x-slot>
 
                 <x-slot name="content">
@@ -185,27 +219,25 @@
                 </x-slot>
 
                 <x-slot name="footer">
-                    <x-button type="button" wire:click="$set('showDeleteSingleRecordModal', false)">Cancel</x-button>
+                    <x-button type="button" wire:click="$set('showDeleteFormRecordModal', false)">Cancel</x-button>
 
                     <x-button type="submit">Delete</x-button>
                 </x-slot>
             </x-modal.confirmation>
         </form>
     </div>
-
     <!-- Delete Single Record Modal -->
     <div>
-        <form wire:submit.prevent="deleteSelectedRecord">
-            <x-modal.confirmation wire:model.defer="showDeleteSelectedRecordModal" selectedIcon="delete">
-                <x-slot name="title">Delete Selected Record</x-slot>
+        <form wire:submit.prevent="deleteFundRecord">
+            <x-modal.confirmation wire:model.defer="showDeleteFundRecordModal" selectedIcon="delete">
+                <x-slot name="title">Delete Record</x-slot>
 
                 <x-slot name="content">
                     <div class="py-8 text-gray-700">Are you sure you? This action is irreversible.</div>
                 </x-slot>
 
                 <x-slot name="footer">
-                    <x-button type="button" wire:click.prevent="$set('showDeleteSelectedRecordModal', false)">Cancel
-                    </x-button>
+                    <x-button type="button" wire:click="$set('showDeleteFundRecordModal', false)">Cancel</x-button>
 
                     <x-button type="submit">Delete</x-button>
                 </x-slot>

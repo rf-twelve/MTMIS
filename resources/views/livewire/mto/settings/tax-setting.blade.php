@@ -52,7 +52,7 @@
                 </div>
                 <div class="flex justify-between px-2 my-2 space-x-2">
                     <div>
-                        <x-button wire:click="create"
+                        <x-button wire:click="createTaxModal()"
                             class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent border-gray-300 shadow-sm hover:text-white w-max rounded-xl hover:bg-blue-500">
                             <x-icon.plus class="w-5 h-5" /> <span>Create</span>
                         </x-button>
@@ -71,13 +71,12 @@
             </div>
 
 
-            <div class="flex flex-col">
+            <div class="flex flex-col" wire:ignore.self>
                 <div class="min-w-full overflow-hidden overflow-x-scroll align-middle shadow">
                     <x-table>
                         <x-slot name="head">
                             <x-table.head class="px-2 py-2">
                                 <x-checkbox wire:model="selectPage" /></x-table.head>
-
                             <x-table.head class="px-2 py-2" sortable wire:click="sortBy('year_from')"
                                 :direction="$sortField === 'year_from' ? $sortDirection : null">FROM(Year)</x-table.head>
 
@@ -122,8 +121,13 @@
                         <x-slot name="body">
                             @forelse ($records as $item)
                             <x-table.row wire:loading.class.delay="opacity-50" wire:key="row-{{ $item->id }}" class="text-gray-600 hover:bg-blue-100">
-                                <x-table.cell class="w-6 pl-2 pr-0">
-                                    <x-checkbox wire:model="selected" value="{{ $item->id }}" />
+                                <x-table.cell class="flex justify-start pl-2 pr-0 space-x-1">
+                                    <a wire:click='editTaxModal({{ $item->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-blue-500">
+                                        <x-icon.edit class="w-5 h-5" />
+                                    </a>
+                                    <a wire:click='toggleDeleteSingleRecordModal({{ $item->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-red-500">
+                                        <x-icon.times class="w-5 h-5" />
+                                    </a>
                                 </x-table.cell>
                                 <x-table.cell>
                                     <span>{{ $item->year_from }}</span>
@@ -215,30 +219,124 @@
             </div>
         </div>
 
-        <div>
-            <form wire:submit.prevent="importFile">
-                <x-modal.dialog wire:model.defer="showImportModal">
-                    <x-slot name="title">Import Data</x-slot>
+        <!-- Create Form Modal-->
+        <div wire:ignore.self>
+            <x-modal.dialog wire:model="show_tax_modal" maxWidth="xl" >
+                <x-slot name="title">
+                    <div class="flex">
+                        <x-icon.form class="w-6 h-6" />
+                        <span>TAX SETTING FORM</span>
+                    </div>
+                </x-slot>
 
-                    <x-slot name="content">
-                        {{-- <x-input.fileupload :error="$errors->first('imports.file')"
-                            helpText="Excell or Csv file up to 10MB.">
-                            <x-slot name="inputIcon">
-                                <x-icon.upload class="w-12 h-12 mx-auto text-gray-400" />
-                            </x-slot>
-                            <x-slot name="inputLabel">
-                                <x-input.file-label label="Upload a file" for="file_upload">
-                                    <x-input.file wire:model="imports.file" class="sr-only" id="file_upload" />
-                                </x-input.file-label>
-                            </x-slot>
-                        </x-input.fileupload> --}}
-                    </x-slot>
-                    <x-slot name="footer">
-                        <x-button wire:click="$set('showImportModal', false)">Cancel</x-button>
-                        <x-button type="submit">Import</x-button>
-                    </x-slot>
-                </x-modal.dialog>
-            </form>
+                <x-slot name="content">
+                    <form wire:submit.prevent="deleteSingleRecord">
+                        <div class="grid grid-cols-6 mt-6 overflow-y-auto gap-y-6 gap-x-4 max-h-96">
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="year_from" class="text-sm">From(Year) :</label>
+                                <x-input wire:model.lazy="year_from" id="year_from" type="number" placeholder="Enter year ex. 2023"/>
+                                @error('year_from')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="year_to" class="text-sm">To(Year) :</label>
+                                <x-input wire:model.lazy="year_to" id="year_to" type="number" placeholder="Enter year ex. 2023"/>
+                                @error('year_to')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="year_no" class="text-sm">No. of Year(s) :</label>
+                                <x-input wire:model.lazy="year_no" id="year_no" type="number" placeholder="Auto-count year"/>
+                                @error('year_no')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-4">
+                                <label for="label" class="text-sm">Label:</label>
+                                <x-input wire:model.lazy="label" id="label" type="text" placeholder="Bracket label name"/>
+                                @error('label')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="av_percent" class="text-sm">AV Percentage:</label>
+                                <x-input wire:model.defer="av_percent" id="av_percent" type="text" placeholder="Assessed Value percentage"/>
+                                @error('av_percent')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+
+                            {{-- Month --}}
+                            <div class="space-y-1 sm:col-span-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Month</h3>
+                                <p class="mt-1 text-sm text-gray-500">Enter value for every month.</p>
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="january" class="text-sm">January:</label>
+                                <x-input wire:model.defer="january" id="january" type="text" placeholder="Enter value ex. 100"/>
+                                @error('january')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="february" class="text-sm">February:</label>
+                                <x-input wire:model.defer="february" id="february" type="text" placeholder="Enter value ex. 100"/>
+                                @error('february')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="march" class="text-sm">March:</label>
+                                <x-input wire:model.defer="march" id="march" type="text" placeholder="Enter value ex. 100"/>
+                                @error('march')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="april" class="text-sm">April:</label>
+                                <x-input wire:model.defer="april" id="april" type="text" placeholder="Enter value ex. 100"/>
+                                @error('april')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="may" class="text-sm">May:</label>
+                                <x-input wire:model.defer="may" id="may" type="text" placeholder="Enter value ex. 100"/>
+                                @error('may')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="june" class="text-sm">June:</label>
+                                <x-input wire:model.defer="june" id="june" type="text" placeholder="Enter value ex. 100"/>
+                                @error('june')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="july" class="text-sm">July:</label>
+                                <x-input wire:model.defer="july" id="july" type="text" placeholder="Enter value ex. 100"/>
+                                @error('july')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="august" class="text-sm">August:</label>
+                                <x-input wire:model.defer="august" id="august" type="text" placeholder="Enter value ex. 100"/>
+                                @error('august')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="september" class="text-sm">September:</label>
+                                <x-input wire:model.defer="september" id="september" type="text" placeholder="Enter value ex. 100"/>
+                                @error('september')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="october" class="text-sm">October:</label>
+                                <x-input wire:model.defer="october" id="october" type="text" placeholder="Enter value ex. 100"/>
+                                @error('october')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="november" class="text-sm">November:</label>
+                                <x-input wire:model.defer="november" id="november" type="text" placeholder="Enter value ex. 100"/>
+                                @error('november')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                            <div class="space-y-1 sm:col-span-2">
+                                <label for="december" class="text-sm">December:</label>
+                                <x-input wire:model.defer="december" id="december" type="text" placeholder="Enter value ex. 100"/>
+                                @error('december')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                            </div>
+                        </div>
+                    </form>
+                </x-slot>
+
+                <x-slot name="footer">
+                    <x-button wire:click="closeTaxModal()" type="button"
+                        class="text-white bg-gray-400 hover:bg-gray-500">
+                        {{ __('Cancel') }}
+                    </x-button>
+                    <x-button wire:click="saveTaxModal()" type="button" class="hover:bg-blue-500 hover:text-white">
+                        {{ __('Save') }}
+                    </x-button>
+                </x-slot>
+            </x-modal.dialog>
         </div>
 
         <!-- Delete Single Record Modal -->
@@ -259,26 +357,6 @@
                 </x-modal.confirmation>
             </form>
         </div>
-
-        <!-- Delete Single Record Modal -->
-        <div>
-            <form wire:submit.prevent="deleteSelectedRecord">
-                <x-modal.confirmation wire:model.defer="showDeleteSelectedRecordModal" selectedIcon="delete">
-                    <x-slot name="title">Delete Selected Record</x-slot>
-
-                    <x-slot name="content">
-                        <div class="py-8 text-gray-700">Are you sure you? This action is irreversible.</div>
-                    </x-slot>
-
-                    <x-slot name="footer">
-                        <x-button type="button" wire:click.prevent="$set('showDeleteSelectedRecordModal', false)">Cancel</x-button>
-
-                        <x-button type="submit">Delete</x-button>
-                    </x-slot>
-                </x-modal.confirmation>
-            </form>
-        </div>
-
 
         </main>
     </div>

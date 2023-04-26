@@ -55,24 +55,24 @@
                             <section aria-labelledby="timeline-title" class="p-4 lg:col-start-3 lg:col-span-1">
                                 <!-- ACCOUNT DETAILS -->
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="from" class="text-sm">Year From :</label>
-                                    <x-input wire:model.lazy="from" id="from" type="text" placeholder="Enter date"/>
-                                    @error('from')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.from" class="text-sm">Year From :</label>
+                                    <x-input wire:model.lazy="query_array.from" id="query_array.from" type="text" placeholder="Enter date"/>
+                                    @error('query_array.from')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="to" class="text-sm">Year To :</label>
-                                    <x-input wire:model.lazy="to" id="to" type="text" placeholder="Enter fullname"/>
-                                    @error('to')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.to" class="text-sm">Year To :</label>
+                                    <x-input wire:model.lazy="query_array.to" id="query_array.to" type="text" placeholder="Enter fullname"/>
+                                    @error('query_array.to')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="signatory" class="text-sm">Signatory :</label>
-                                    <x-input wire:model.lazy="signatory" id="signatory" type="text" placeholder="Enter designation"/>
-                                    @error('signatory')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.prepared_by" class="text-sm">Prepared By :</label>
+                                    <x-input wire:model.lazy="query_array.prepared_by" id="query_array.prepared_by" type="text" placeholder="Enter designation"/>
+                                    @error('query_array.prepared_by')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="designation" class="text-sm">Designation :</label>
-                                    <x-input wire:model.lazy="designation" id="designation" type="text" placeholder="Enter designation"/>
-                                    @error('designation')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.designation" class="text-sm">Designation :</label>
+                                    <x-input wire:model.lazy="query_array.designation" id="query_array.designation" type="text" placeholder="Enter designation"/>
+                                    @error('query_array.designation')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                             </section>
                         </nav>
@@ -93,8 +93,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                         </svg>
                                         <span class="pl-2">REPORTS</span>
-                                        <a target="__blank" href="#" class="flex mt-1 ml-3 text-indigo-600 hover:text-indigo-900">
-                                        {{-- <a target="__blank" href="{{ route('charge-slip.print',['user_id'=>auth()->user()->id, 'id'=> $cs_id]) }}" class="flex ml-3 text-indigo-600 hover:text-indigo-900"> --}}
+                                        <a target="__blank" href="{{ route('print.reports',['user_id'=>auth()->user()->id,'query_string'=>$query_string]) }}" class="flex mt-1 ml-3 text-indigo-600 hover:text-indigo-900">
                                             <x-icon.printer class="w-4 h-4" /><span class="text-xs">Print</span>
                                         </a>
                                     </div>
@@ -171,8 +170,8 @@
                                         <div>
                                             <span>Prepared by:</span>
                                             <div class="mt-4 text-center">
-                                                <p class="mb-0"><strong>{{$signatory}}</strong></p>
-                                                <span>{{$designation}}</span>
+                                                <p class="mb-0"><strong>{{$query_array['prepared_by']}}</strong></p>
+                                                <span>{{$query_array['designation']}}</span>
                                             </div>
                                         </div>
                                     </div>

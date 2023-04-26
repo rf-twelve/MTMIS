@@ -57,29 +57,6 @@
                                     <option value="100">100 / page</option>
                                 </x-select>
                             </div>
-                            {{-- <div>
-                                <x-dropdown class="rounded-xl" label="Action">
-                                    <x-dropdown.item class="rounded-xl" type="button" wire:click="$toggle('showDeleteSelectedRecordModal')"
-                                        class="flex items-center space-x-2">
-                                        <x-icon.trash class="text-cool-gray-400" /> <span>Verify</span>
-                                    </x-dropdown.item>
-                                    <x-dropdown.item class="rounded-xl" type="button" wire:click="$toggle('showDeleteSelectedRecordModal')"
-                                        class="flex items-center space-x-2">
-                                        <x-icon.trash class="text-cool-gray-400" /> <span>Ledger Entry</span>
-                                    </x-dropdown.item>
-                                    <x-dropdown.item class="rounded-xl" type="button" wire:click="$toggle('showDeleteSelectedRecordModal')"
-                                        class="flex items-center space-x-2">
-                                        <x-icon.trash class="text-cool-gray-400" /> <span>Delete</span>
-                                    </x-dropdown.item>
-                                </x-dropdown>
-                            </div>
-                            <div>
-                                <x-button wire:click="$toggle('showImportModal')"
-                                    class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent shadow-sm rounded-xl hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
-                                    <x-icon.download class="w-5 h-5" /> <span>Import</span>
-                                </x-button>
-                            </div> --}}
-
                         </div>
                     </div>
                 </div>
@@ -249,32 +226,6 @@
                 </x-modal.dialog>
             </div>
 
-            <div>
-                <form wire:submit.prevent="importFile">
-                    <x-modal.dialog wire:model.defer="showImportModal">
-                        <x-slot name="title">Import Data</x-slot>
-
-                        <x-slot name="content">
-                            {{-- <x-input.fileupload :error="$errors->first('imports.file')"
-                                helpText="Excell or Csv file up to 10MB.">
-                                <x-slot name="inputIcon">
-                                    <x-icon.upload class="w-12 h-12 mx-auto text-gray-400" />
-                                </x-slot>
-                                <x-slot name="inputLabel">
-                                    <x-input.file-label label="Upload a file" for="file_upload">
-                                        <x-input.file wire:model="imports.file" class="sr-only" id="file_upload" />
-                                    </x-input.file-label>
-                                </x-slot>
-                            </x-input.fileupload> --}}
-                        </x-slot>
-                        <x-slot name="footer">
-                            <x-button wire:click="$set('showImportModal', false)">Cancel</x-button>
-                            <x-button type="submit">Import</x-button>
-                        </x-slot>
-                    </x-modal.dialog>
-                </form>
-            </div>
-
             <!-- Delete Single Record Modal -->
             <div>
                 <form wire:submit.prevent="deleteSingleRecord">
@@ -293,26 +244,6 @@
                     </x-modal.confirmation>
                 </form>
             </div>
-
-            <!-- Delete Single Record Modal -->
-            <div>
-                <form wire:submit.prevent="deleteSelectedRecord">
-                    <x-modal.confirmation wire:model.defer="showDeleteSelectedRecordModal" selectedIcon="delete">
-                        <x-slot name="title">Delete Selected Record</x-slot>
-
-                        <x-slot name="content">
-                            <div class="py-8 text-gray-700">Are you sure you? This action is irreversible.</div>
-                        </x-slot>
-
-                        <x-slot name="footer">
-                            <x-button type="button" wire:click.prevent="$set('showDeleteSelectedRecordModal', false)">Cancel</x-button>
-
-                            <x-button type="submit">Delete</x-button>
-                        </x-slot>
-                    </x-modal.confirmation>
-                </form>
-            </div>
-
 
             </main>
         </div>

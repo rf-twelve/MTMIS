@@ -55,29 +55,29 @@
                             <section aria-labelledby="timeline-title" class="p-4 lg:col-start-3 lg:col-span-1">
                                 <!-- ACCOUNT DETAILS -->
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="report_date" class="text-sm">Date :</label>
-                                    <x-input wire:model.lazy="report_date" id="report_date" type="text" placeholder="Enter date"/>
-                                    @error('report_date')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.report_date" class="text-sm">Date :</label>
+                                    <x-input wire:model.lazy="query_array.report_date" id="query_array.report_date" type="date" placeholder="Enter date"/>
+                                    @error('query_array.report_date')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="prepared_by" class="text-sm">Prepared by :</label>
-                                    <x-input wire:model.lazy="prepared_by" id="prepared_by" type="text" placeholder="Enter fullname"/>
-                                    @error('prepared_by')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.prepared_by" class="text-sm">Prepared by :</label>
+                                    <x-input wire:model.lazy="query_array.prepared_by" id="query_array.prepared_by" type="text" placeholder="Enter fullname"/>
+                                    @error('query_array.prepared_by')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="designation1" class="text-sm">Designation :</label>
-                                    <x-input wire:model.lazy="designation1" id="designation1" type="text" placeholder="Enter designation"/>
-                                    @error('designation1')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.designation1" class="text-sm">Designation :</label>
+                                    <x-input wire:model.lazy="query_array.designation1" id="query_array.designation1" type="text" placeholder="Enter designation"/>
+                                    @error('query_array.designation1')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="noted_by" class="text-sm">Noted by :</label>
-                                    <x-input wire:model.lazy="noted_by" id="noted_by" type="text" placeholder="Enter fullname"/>
-                                    @error('noted_by')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.noted_by" class="text-sm">Noted by :</label>
+                                    <x-input wire:model.lazy="query_array.noted_by" id="query_array.noted_by" type="text" placeholder="Enter fullname"/>
+                                    @error('query_array.noted_by')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label for="designation2" class="text-sm">Designation :</label>
-                                    <x-input wire:model.lazy="designation2" id="designation2" type="text" placeholder="Enter designation"/>
-                                    @error('designation2')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
+                                    <label for="query_array.designation2" class="text-sm">Designation :</label>
+                                    <x-input wire:model.lazy="query_array.designation2" id="query_array.designation2" type="text" placeholder="Enter designation"/>
+                                    @error('query_array.designation2')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
                                 </div>
                             </section>
                         </nav>
@@ -98,8 +98,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                         </svg>
                                         <span class="pl-2">REPORTS</span>
-                                        <a target="__blank" href="#" class="flex mt-1 ml-3 text-indigo-600 hover:text-indigo-900">
-                                        {{-- <a target="__blank" href="{{ route('charge-slip.print',['user_id'=>auth()->user()->id, 'id'=> $cs_id]) }}" class="flex ml-3 text-indigo-600 hover:text-indigo-900"> --}}
+                                        <a target="__blank" href="{{ route('print.reports',['user_id'=>auth()->user()->id,'query_string'=>$query_string]) }}" class="flex mt-1 ml-3 text-indigo-600 hover:text-indigo-900">
                                             <x-icon.printer class="w-4 h-4" /><span class="text-xs">Print</span>
                                         </a>
                                     </div>
@@ -115,7 +114,7 @@
                                         Province of QUEZON<br>
                                         Municipality of LOPEZ<br>
                                         <strong>OFFICE OF THE MUNICIPAL TREASURER</strong><br>
-                                        As of 2023-04-17<br>
+                                        As of {{ $query_array['report_date'] }}<br>
 
                                     </div>
                                     <div class="mt-2 text-center">
@@ -187,15 +186,15 @@
                                         <div>
                                             <span>Prepared by:</span>
                                             <div class="mt-4 text-center">
-                                                <p class="mb-0"><strong>{{$prepared_by}}</strong></p>
-                                                <span>{{$designation1}}</span>
+                                                <p class="mb-0 underline"><strong>{{$query_array['prepared_by']}}</strong></p>
+                                                <span>{{$query_array['designation1']}}</span>
                                             </div>
                                         </div>
                                         <div>
                                             <span>Noted by:</span>
                                             <div class="mt-4 text-center">
-                                                <p class="mb-0"><strong>{{$noted_by}}</strong></p>
-                                                <span>{{$designation2}}</span>
+                                                <p class="mb-0 underline"><strong>{{$query_array['noted_by']}}</strong></p>
+                                                <span>{{$query_array['designation2']}}</span>
                                             </div>
                                         </div>
                                     </div>

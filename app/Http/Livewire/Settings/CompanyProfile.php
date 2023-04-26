@@ -2,85 +2,84 @@
 
 namespace App\Http\Livewire\Settings;
 
-use App\Http\Livewire\Traits\WithPermissionsTrait;
-use App\Http\Livewire\Traits\WithRolesTrait;
 use App\Models\Company;
-use App\Models\User;
 use Livewire\Component;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Livewire\WithFileUploads;
 
 class CompanyProfile extends Component
 {
-    // use WithRolesTrait, WithPermissionsTrait;
-
+    use WithFileUploads;
+    public $company_id;
     public $name;
-    public $address;
-    public $province;
-    public $system_title;
+    public $system;
+    public $developer;
     public $logo;
-    public $bg_login;
-    public $copyright;
-    public $version;
+    public $temp_logo;
+    public $display_logo;
+    public $bg_image;
+    public $temp_bg_image;
+    public $display_bg_image;
+    public $address;
 
-    public $company;
+    public function rules() { return [
+        // 'editing.type' => 'required|in:'.collect(VmsPar::TYPES)->keys()->implode(','),
+        'name' => 'required',
+        'logo' => 'required',
+        'system' => 'required',
+        'developer' => 'required',
+        'bg_image' => 'nullable',
+        'address' => 'nullable',
+    ]; }
 
-    public $selected_user;
-    public $all_users;
-    public $user_role;
-    public $user_permission;
-    public $search;
-    public $addRoleModal, $addPermissionModal;
-    public $assign_role_confirmation, $assign_permission_confirmation;
-    public $role_id;
-    public $role_name;
-    public $assign_user_role_id, $assign_user_role_name;
-    public $permission_id;
-    public $permission_name;
-    public $action_array = ['create','read','update','delete'];
+    public function save()
+    {
+        $validated = $this->validate();
+        $validated['logo'] = $this->temp_logo ? $this->temp_logo->store('/','images') : $this->logo;
+        $validated['bg_image'] =$this->temp_bg_image ? $this->temp_bg_image->store('/','images') : $this->bg_image;
+        $data = Company::find('1');
+        if($data){
+            $data->update($validated);
+        }else{
+            Company::create($validated);
+        }
+        return redirect()->route('user-dashboard',['user_id'=>auth()->user()->id]);
+        $this->notify('Company profile updated, Successfully!');
+    }
 
+    public function updatedTempLogo()
+    {
+        $this->display_logo = $this->temp_logo->temporaryUrl();
+    }
+
+    public function updatedTempBgImage()
+    {
+        $this->display_bg_image = $this->temp_bg_image->temporaryUrl();
+    }
+
+    public function setFields()
+    {
+        $company = Company::find(1);
+        if($company){
+            $this->company_id = $company->id;
+            $this->name = $company->name;
+            $this->system = $company->system;
+            $this->developer = $company->developer;
+            $this->logo = $company->logo;
+            $this->display_logo = $company->logoUrl();
+            $this->bg_image = $company->bg_image;
+            $this->display_bg_image = $company->bgUrl();
+            $this->address = $company->address;
+            $this->temp_logo = null;
+            $this->temp_bg_image = null;
+        }
+    }
+    public function mount()
+    {
+        $this->setFields();
+    }
 
     public function render()
     {
-        // dd(Role::get());
-        return view('livewire.settings.company-profile',[
-            'role_list' => Role::get(),
-            'permission_list' => Permission::get()->groupBy('group'),
-            'user_list' => $this->all_users,
-        ]);
+        return view('livewire.settings.company-profile');
     }
-
-    public function mount(){
-        $this->company = Company::find(1);
-    }
-
-    public function updatedSearch(){
-        $this->all_users = User::where('fullname','LIKE','%'.$this->search.'%')->get();
-    }
-
-    public function selectedUser($id){
-        $this->selected_user = User::find($id);
-
-        $get_role = '';
-        $get_permissions = [];
-        try {
-            $get_role = $this->selected_user->getRoleNames()->first();
-            $get_permissions = $this->selected_user->getPermissionNames();
-        } catch (\Throwable $th) {
-            dump($th);
-        }
-        $this->user_role = $get_role;
-        $this->user_permission = $get_permissions;
-        // dd($get_permissions);
-        // $this->selected_user = [
-        //     'id' => $user['id'],
-        //     'fullname' => $user['fullname'],
-        //     'username' => $user['username'],
-        //     'email' => $user['email'],
-        //     'avatar' => $user['avatar'],
-        //     'role' => $get_roles,
-        //     'permission' => $get_permissions,
-        // ];
-    }
-
 }

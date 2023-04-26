@@ -19,6 +19,7 @@ use App\Http\Livewire\Mto\Collections;
 use App\Http\Livewire\Mto\LedgerEntry;
 use App\Http\Livewire\Mto\MtoReports;
 use App\Http\Livewire\Mto\MtoSettings;
+use App\Http\Livewire\Mto\PrintReport;
 use App\Http\Livewire\Mto\Reports;
 use App\Http\Livewire\Mto\Reports\AssessmentRollReport;
 use App\Http\Livewire\Mto\Reports\CollectibleReport;
@@ -62,7 +63,7 @@ Route::get('/permission_add', function () {
 });
 
 
-Route::get('/privacy-policy', PrivacyPolicy::class)->name('Privacy Policy');
+// Route::get('/privacy-policy', PrivacyPolicy::class)->name('Privacy Policy');
 
 Route::get('/', Login::class)->name('login');
 Route::get('/login', Login::class)->name('login');
@@ -73,7 +74,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function()
 {
     Route::get('{user_id}/mao/assessment-rolls', AssessmentRolls::class)->name('assessment-rolls');
     Route::get('{user_id}/mao/assessment-roll/{id}', AssessmentRollView::class)->name('assessment-roll.view');
-    Route::get('{user_id}/mao/assessment-roll/{id}/create', AssessmentRollCreate::class)->name('assessment-roll.create');
+    Route::get('{user_id}/mao/assessment-roll/create', AssessmentRollCreate::class)->name('assessment-roll.create');
     Route::get('{user_id}/mao/assessment-roll/{id}/edit', AssessmentRollEdit::class)->name('assessment-roll.edit');
     Route::get('{user_id}/mao/assessment-roll/{id}/print', [AssessmentRollPrint::class, 'print'])->name('assessment-roll.print');
     Route::get('{user_id}/mao/assessment-roll-reports', AssessmentRollReports::class)->name('assessment-roll.reports');
@@ -86,9 +87,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function()
     Route::get('{user_id}/mto/ledger-entry/{id}', LedgerEntry::class)->name('ledger-entry');
     Route::get('{user_id}/mto/mto-reports', MtoReports::class)->name('mto-reports');
     Route::get('{user_id}/mto/mto-settings', MtoSettings::class)->name('mto-settings');
-    Route::get('{user_id}/mto/reports/collectible-report', CollectibleReport::class)->name('collectible.reports');
     Route::get('{user_id}/mto/reports/collection-and-deposit-report', CollectionAndDepositReport::class)->name('collection-and-deposit.reports');
+    Route::get('{user_id}/mto/reports/collectible-report', CollectibleReport::class)->name('collectible.reports');
     Route::get('{user_id}/mto/reports/delinquency-report', DelinquencyReport::class)->name('delinquency.reports');
+    Route::get('{user_id}/mto/reports/print/{query_string}', [PrintReport::class,'print'])->name('print.reports');
     Route::get('{user_id}/mto/settings/booklet-setting', BookletSetting::class)->name('settings/booklet-setting');
     Route::get('{user_id}/mto/settings/form-setting', FormSetting::class)->name('settings/form-setting');
     Route::get('{user_id}/mto/settings/locality-setting', LocalitySetting::class)->name('settings/locality-setting');

@@ -1,11 +1,10 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\InputGroup;
 
-use App\Models\Company;
 use Illuminate\View\Component;
 
-class SidebarDesktop extends Component
+class TaxForm extends Component
 {
     /**
      * Create a new component instance.
@@ -24,8 +23,6 @@ class SidebarDesktop extends Component
      */
     public function render()
     {
-        return view('components.sidebar-desktop',[
-            'company' => Company::find(1)
-        ]);
+        return view('components.input-group.tax-form');
     }
 }

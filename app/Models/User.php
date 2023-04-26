@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -27,6 +28,21 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+
+    public function imageUrl()
+    {
+        return $this->avatar
+            ? Storage::disk('images')->url($this->avatar)
+            : asset('img/users/avatar.png');
+    }
+    public function officeName()
+    {
+        return $this->office_id
+            ? (Office::find($this->office_id))->name
+            : 'Unknown';
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

@@ -30,6 +30,20 @@ class BookletSetting extends Component
         'date-max' => null,
     ];
 
+    public function rules() { return [
+        'form' => 'required',
+        'begin_qty' => 'required',
+        'begin_serial_fr' => 'required',
+        'begin_serial_to' => 'required',
+        'issued_qty' => 'required',
+        'issued_serial_fr' => 'required',
+        'issued_serial_to' => 'required',
+        'end_qty' => 'required',
+        'end_serial_fr' => 'required',
+        'end_serial_to' => 'required',
+        'user_id' => 'required',
+    ]; }
+
     public function getRowsQueryProperty()
     {
 
@@ -68,46 +82,22 @@ class BookletSetting extends Component
 
     public function saveBookletRecord()
     {
+        $valid = $this->validate();
         if (isset($this->booklet_id)) {
-            MtoRptBooklet::find($this->booklet_id)->update([
-                'form' => $this->form,
-                'begin_qty' => $this->begin_qty,
-                'begin_serial_fr' => $this->begin_serial_fr,
-                'begin_serial_to' => $this->begin_serial_to,
-                'issued_qty' => $this->issued_qty,
-                'issued_serial_fr' => $this->issued_serial_fr,
-                'issued_serial_to' => $this->issued_serial_to,
-                'end_qty' => $this->end_qty,
-                'end_serial_fr' => $this->end_serial_fr,
-                'end_serial_to' => $this->end_serial_to,
-                'user_id' => $this->user_id,
-            ]);
-            $this->notify('You\'ve update record successfully.');
+
+            MtoRptBooklet::find($this->booklet_id)->update($valid);
+
         } else {
-            MtoRptBooklet::create([
-                'form' => $this->form,
-                'begin_qty' => $this->begin_qty,
-                'begin_serial_fr' => $this->begin_serial_fr,
-                'begin_serial_to' => $this->begin_serial_to,
-                'issued_qty' => $this->issued_qty,
-                'issued_serial_fr' => $this->issued_serial_fr,
-                'issued_serial_to' => $this->issued_serial_to,
-                'end_qty' => $this->end_qty,
-                'end_serial_fr' => $this->end_serial_fr,
-                'end_serial_to' => $this->end_serial_to,
-                'user_id' => $this->user_id,
-            ]);
-            $this->notify('You\'ve save record successfully.');
+
+            MtoRptBooklet::create($valid);
         }
-        $this->resetFields();
         $this->showFormModal = false;
+        $this->notify('You\'ve save record successfully.');
     }
 
     public function closeBookletRecord()
     {
         $this->showFormModal = false;
-        $this->resetFields();
-
     }
 
     public function toggleDeleteSingleRecordModal($id)
@@ -121,8 +111,6 @@ class BookletSetting extends Component
         MtoRptBooklet::destroy($this->booklet_id);
 
         $this->showDeleteSingleRecordModal = false;
-
-        $this->resetFields();
 
         $this->notify('You\'ve deleted record successfully.');
     }
@@ -147,75 +135,106 @@ class BookletSetting extends Component
     {
         $this->booklet_id = null;
         $this->form = '';
-        $this->begin_qty = '';
-        $this->begin_serial_fr = '';
-        $this->begin_serial_to = '';
-        $this->issued_qty = '';
-        $this->issued_serial_fr = '';
-        $this->issued_serial_to = '';
-        $this->end_qty = '';
-        $this->end_serial_fr = '';
-        $this->end_serial_to = '';
-        $this->user_id = '';
-    }
-
-    public function UpdatedBeginQty()
-    {
-        if ($this->booklet_id == null) {
-            if ($this->begin_serial_fr != "" && $this->begin_serial_fr > 0) {
-                $this->begin_serial_to = ($this->begin_serial_fr + $this->begin_qty) - 1;
-            } elseif ($this->begin_serial_to != "" && $this->begin_serial_to > 0) {
-                $this->begin_serial_fr = ($this->begin_serial_to - $this->begin_qty) + 1;
-            }
-            $this->initializeFields();
-        }
-
-    }
-
-    public function UpdatedBeginSerialFr()
-    {
-        if ($this->booklet_id == null) {
-            if ($this->begin_qty != "" && $this->begin_qty > 0) {
-                $this->begin_serial_to = ($this->begin_serial_fr + $this->begin_qty) - 1;
-            } elseif ($this->begin_serial_to != "" && $this->begin_serial_to > 0) {
-                $this->begin_qty = ($this->begin_serial_to - $this->begin_serial_fr) + 1;
-            }
-            $this->initializeFields();
-        }
-    }
-
-    public function UpdatedBeginSerialTo()
-    {
-        if ($this->booklet_id == null) {
-            if ($this->begin_qty != "" && $this->begin_qty > 0) {
-                $this->begin_serial_fr = ($this->begin_serial_to - $this->begin_qty) + 1;
-            } elseif ($this->begin_serial_fr != "" && $this->begin_serial_fr > 0) {
-                $this->begin_qty = ($this->begin_serial_to - $this->begin_serial_fr) + 1;
-            }
-            $this->initializeFields();
-        }
-    }
-
-    public function initializeFields()
-    {
+        $this->begin_qty = 0;
+        $this->begin_serial_fr = 0;
+        $this->begin_serial_to = 0;
         $this->issued_qty = 0;
         $this->issued_serial_fr = 0;
         $this->issued_serial_to = 0;
-        $this->end_qty = $this->begin_qty;
-        $this->end_serial_fr = $this->begin_serial_fr;
+        $this->end_qty = 0;
+        $this->end_serial_fr = 0;
+        $this->end_serial_to = 0;
+        $this->user_id = auth()->user()->id;
+    }
+
+    public function updated($propertyName){
+        $this->initializeBeginningBalance();
+        if($propertyName === 'begin_qty'){
+            $this->begin_serial_to = ($this->begin_serial_fr + $this->begin_qty) - 1;
+            $this->begin_serial_fr = ($this->begin_serial_to - $this->begin_qty) + 1;
+        }
+
+        if($propertyName === 'begin_serial_fr'){
+            $this->begin_serial_to = ($this->begin_serial_fr + $this->begin_qty) - 1;
+            $this->begin_qty = ($this->begin_serial_to - $this->begin_serial_fr) + 1;
+        }
+
+        if($propertyName === 'begin_serial_to'){
+            $this->begin_serial_fr = ($this->begin_serial_to - $this->begin_qty) + 1;
+            $this->begin_qty = ($this->begin_serial_to - $this->begin_serial_fr) + 1;
+        }
+        if($propertyName === 'issued_qty'){
+            $this->issued_serial_fr = $this->begin_serial_fr;
+            $this->issued_serial_to = ($this->issued_serial_fr + $this->issued_qty) - 1;
+        }
+
+        if($propertyName === 'issued_serial_fr'){
+            $this->issued_serial_fr = $this->begin_serial_fr;
+            $this->issued_serial_to = ($this->issued_serial_fr + $this->issued_qty) - 1;
+        }
+
+        if($propertyName === 'issued_serial_to'){
+            $this->issued_serial_fr = $this->begin_serial_fr;
+            $this->issued_serial_to = ($this->issued_serial_fr + $this->issued_qty) - 1;
+        }
+        $this->initializeIssuedBalance();
+        $this->initializeEndingBalance();
+    }
+
+    // public function UpdatedBeginQty()
+    // {
+    //     if ($this->booklet_id == null) {
+    //         if ($this->begin_serial_fr != "" && $this->begin_serial_fr > 0) {
+    //             $this->begin_serial_to = ($this->begin_serial_fr + $this->begin_qty) - 1;
+    //         } elseif ($this->begin_serial_to != "" && $this->begin_serial_to > 0) {
+    //             $this->begin_serial_fr = ($this->begin_serial_to - $this->begin_qty) + 1;
+    //         }
+    //         $this->initializeFields();
+    //     }
+
+    // }
+
+
+    // public function UpdatedBeginSerialTo()
+    // {
+    //     if ($this->booklet_id == null) {
+    //         if ($this->begin_qty != "" && $this->begin_qty > 0) {
+    //             $this->begin_serial_fr = ($this->begin_serial_to - $this->begin_qty) + 1;
+    //         } elseif ($this->begin_serial_fr != "" && $this->begin_serial_fr > 0) {
+    //             $this->begin_qty = ($this->begin_serial_to - $this->begin_serial_fr) + 1;
+    //         }
+    //         $this->initializeFields();
+    //     }
+    // }
+
+
+
+    public function initializeBeginningBalance(){
+        if(is_null($this->begin_serial_fr) || empty($this->begin_serial_fr)){
+            $this->begin_serial_fr = 0;
+        }
+        if(is_null($this->begin_serial_to) || empty($this->begin_serial_to)){
+            $this->begin_serial_to = 0;
+        }
+        if(is_null($this->begin_qty) || empty($this->begin_qty)){
+            $this->begin_qty = 0;
+        }
+    }
+    public function initializeIssuedBalance(){
+        if(is_null($this->issued_qty) || empty($this->issued_qty)){
+            $this->issued_qty = 0;
+        }
+        if(is_null($this->issued_serial_fr) || empty($this->issued_serial_fr)){
+            $this->issued_serial_fr = 0;
+        }
+        if(is_null($this->issued_serial_to) || empty($this->issued_serial_to)){
+            $this->issued_serial_to = 0;
+        }
+    }
+    public function initializeEndingBalance(){
+        $this->end_qty = $this->begin_qty - $this->issued_qty;
+        $this->end_serial_fr = $this->begin_serial_fr + $this->issued_qty;
         $this->end_serial_to = $this->begin_serial_to;
     }
-//     1. begin qty is updated
-//    if begin has value then begin_to (begin + qty) - 1
-//    set issued equal to 0
-//    set ending equal to beggining
-
-// 2. begin from is updated
-//    if qty has value the begin_to (begin + qty) - 1
-//    set issued equal to 0
-//    set ending equal to beggining
-
-// 3. begin to is updated
-//    if from it <= to then (to - from) + 1
 
 }

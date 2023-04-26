@@ -153,7 +153,7 @@
                             <x-icon.plus class="w-5 font-light" /> <p>Create</p>
                         </x-button>
                     </div>
-                    <div class="flex justify-end space-x-1">
+                    {{-- <div class="flex justify-end space-x-1">
                         <div>
                             <x-select wire:model.debounce.500ms="filters.sort-field"  id="sortField">
                                 <option value="form">Form</option>
@@ -168,7 +168,7 @@
                                 <option value="end_serial_to">End serial to</option>
                             </x-select>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="flex justify-end space-x-1">
                         <div>
                             <x-select wire:model.debounce.500ms="filters.per-page"  id="perPage">
@@ -270,7 +270,7 @@
 
         <!-- Booklet Form -->
         <div>
-            <x-modal.dialog wire:model="showFormModal" maxWidth="sm">
+            <x-modal.dialog wire:model="showFormModal" maxWidth="xl">
                 <x-slot name="title">
                     <div class="flex">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

@@ -86,7 +86,7 @@
                                             <a wire:click='regionEditOpen({{ $region->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-blue-500">
                                                 <x-icon.edit class="w-5 h-5" />
                                             </a>
-                                            <a wire:click='regionDelete({{ $region->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-red-500">
+                                            <a wire:click='deleteRegionModal({{ $region->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-red-500">
                                                 <x-icon.times class="w-5 h-5" />
                                             </a>
                                         </td>
@@ -133,9 +133,12 @@
                                         <td class="px-2 py-2 text-sm text-gray-500 whitespace-nowrap">
                                             {{ $province['name'] }}
                                         </td>
-                                        <td class="flex text-right">
-                                            <a wire:click='provinceEditOpen({{ $province->id }})' href="#" class="px-2 py-1 my-1 text-sm font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-500 rounded-xl">
+                                        <td class="flex justify-end p-2">
+                                            <a wire:click='provinceEditOpen({{ $province->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-blue-500">
                                                 <x-icon.edit class="w-5 h-5" />
+                                            </a>
+                                            <a wire:click='deleteProvinceModal({{ $province->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-red-500">
+                                                <x-icon.times class="w-5 h-5" />
                                             </a>
                                         </td>
                                     </tr>
@@ -181,9 +184,12 @@
                                         <td class="px-2 py-2 text-sm text-gray-500 whitespace-nowrap">
                                             {{ $municity['name'] }}
                                         </td>
-                                        <td class="flex text-right">
-                                            <a wire:click='municityEditOpen({{ $municity->id }})' href="#" class="px-2 py-1 my-1 text-sm font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-500 rounded-xl">
+                                        <td class="flex justify-end p-2">
+                                            <a wire:click='municityEditOpen({{ $municity->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-blue-500">
                                                 <x-icon.edit class="w-5 h-5" />
+                                            </a>
+                                            <a wire:click='deleteMunicityModal({{ $municity->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-red-500">
+                                                <x-icon.times class="w-5 h-5" />
                                             </a>
                                         </td>
                                     </tr>
@@ -229,9 +235,12 @@
                                         <td class="px-2 py-2 text-sm text-gray-500 whitespace-nowrap">
                                             {{ $barangay['name'] }}
                                         </td>
-                                        <td class="flex text-right">
-                                            <a wire:click='barangayEditOpen({{ $barangay->id }})' href="#" class="px-2 py-1 my-1 text-sm font-medium text-gray-700 bg-white hover:text-white hover:bg-blue-500 rounded-xl">
+                                        <td class="flex justify-end p-2">
+                                            <a wire:click='barangayEditOpen({{ $barangay->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-blue-500">
                                                 <x-icon.edit class="w-5 h-5" />
+                                            </a>
+                                            <a wire:click='deleteBarangayModal({{ $barangay->id }})' href="#" class="p-1 text-sm font-medium text-gray-700 bg-white rounded-md hover:text-white hover:bg-red-500">
+                                                <x-icon.times class="w-5 h-5" />
                                             </a>
                                         </td>
                                     </tr>
@@ -355,8 +364,8 @@
 
     <!-- Delete Single Record Modal -->
     <div>
-        <form wire:submit.prevent="deleteSingleRecord">
-            <x-modal.confirmation wire:model.defer="showDeleteSingleRecordModal" selectedIcon="delete">
+        <form wire:submit.prevent="deleteRegionRecord">
+            <x-modal.confirmation wire:model.defer="show_region_delete_modal" selectedIcon="delete">
                 <x-slot name="title">Delete Record</x-slot>
 
                 <x-slot name="content">
@@ -364,7 +373,61 @@
                 </x-slot>
 
                 <x-slot name="footer">
-                    <x-button type="button" wire:click="$set('showDeleteSingleRecordModal', false)">Cancel</x-button>
+                    <x-button type="button" wire:click="$set('show_region_delete_modal', false)">Cancel</x-button>
+
+                    <x-button type="submit">Delete</x-button>
+                </x-slot>
+            </x-modal.confirmation>
+        </form>
+    </div>
+
+    <div>
+        <form wire:submit.prevent="deleteProvinceRecord">
+            <x-modal.confirmation wire:model.defer="show_province_delete_modal" selectedIcon="delete">
+                <x-slot name="title">Delete Record</x-slot>
+
+                <x-slot name="content">
+                    <div class="py-8 text-gray-700">Are you sure you? This action is irreversible.</div>
+                </x-slot>
+
+                <x-slot name="footer">
+                    <x-button type="button" wire:click="$set('show_province_delete_modal', false)">Cancel</x-button>
+
+                    <x-button type="submit">Delete</x-button>
+                </x-slot>
+            </x-modal.confirmation>
+        </form>
+    </div>
+
+    <div>
+        <form wire:submit.prevent="deleteMunicityRecord">
+            <x-modal.confirmation wire:model.defer="show_municity_delete_modal" selectedIcon="delete">
+                <x-slot name="title">Delete Record</x-slot>
+
+                <x-slot name="content">
+                    <div class="py-8 text-gray-700">Are you sure you? This action is irreversible.</div>
+                </x-slot>
+
+                <x-slot name="footer">
+                    <x-button type="button" wire:click="$set('show_municity_delete_modal', false)">Cancel</x-button>
+
+                    <x-button type="submit">Delete</x-button>
+                </x-slot>
+            </x-modal.confirmation>
+        </form>
+    </div>
+
+    <div>
+        <form wire:submit.prevent="deleteBarangayRecord">
+            <x-modal.confirmation wire:model.defer="show_barangay_delete_modal" selectedIcon="delete">
+                <x-slot name="title">Delete Record</x-slot>
+
+                <x-slot name="content">
+                    <div class="py-8 text-gray-700">Are you sure you? This action is irreversible.</div>
+                </x-slot>
+
+                <x-slot name="footer">
+                    <x-button type="button" wire:click="$set('show_barangay_delete_modal', false)">Cancel</x-button>
 
                     <x-button type="submit">Delete</x-button>
                 </x-slot>
