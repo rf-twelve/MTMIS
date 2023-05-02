@@ -166,7 +166,7 @@ trait WithPaymentComputation
     ## COMPUTE BY QUARTER
     public function quarterCompute($var_array)
     {
-        dd($var_array);
+        // dd($var_array);
 
 
         // foreach ($var_array as $key => $arr) {

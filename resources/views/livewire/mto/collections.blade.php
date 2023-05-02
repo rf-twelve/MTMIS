@@ -47,7 +47,7 @@
                             <option value="100">100 / page</option>
                         </x-select>
                     </div>
-                    <div>
+                    {{-- <div>
                         <x-dropdown class="rounded-xl" label="Action">
                             <x-dropdown.item class="rounded-xl" type="button" wire:click="$toggle('showDeleteSelectedRecordModal')"
                                 class="flex items-center space-x-2">
@@ -62,13 +62,13 @@
                                 <x-icon.trash class="text-cool-gray-400" /> <span>Delete</span>
                             </x-dropdown.item>
                         </x-dropdown>
-                    </div>
-                    <div>
+                    </div> --}}
+                    {{-- <div>
                         <x-button wire:click="$toggle('showImportModal')"
                             class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent shadow-sm rounded-xl hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
                             <x-icon.download class="w-5 h-5" /> <span>Import</span>
                         </x-button>
-                    </div>
+                    </div> --}}
                     <div>
                         <x-button wire:click="create"
                             class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-600 bg-white border border-transparent shadow-sm w-max rounded-xl hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
@@ -85,7 +85,7 @@
                 <x-table>
                     <x-slot name="head">
                         <x-table.head class="px-2 py-1">
-                            <x-checkbox wire:model="selectPage" />
+                            {{-- <x-checkbox wire:model="selectPage" /> --}}
                         </x-table.head>
                         <x-table.head class="px-2 py-1" sortable wire:click="sortBy('rpt_pin')"
                             :direction="$sortField === 'rpt_pin' ? $sortDirection : null">PIN
@@ -98,7 +98,7 @@
                         <x-table.head class="px-2 py-1">Last Payment Date</x-table.head>
                         <x-table.head class="px-2 py-1">O.R. No.</x-table.head>
                         <x-table.head class="px-2 py-1">Covered</x-table.head>
-                        <x-table.head class="w-10 px-6 py-1"><span class="sr-only">Edit</span></x-table.head>
+                        {{-- <x-table.head class="w-10 px-6 py-1"><span class="sr-only">Edit</span></x-table.head> --}}
                     </x-slot>
 
                     <x-slot name="body">
@@ -121,8 +121,22 @@
 
                         @forelse ($rpt_accounts as $item)
                         <x-table.row wire:loading.class.delay="opacity-50" wire:key="row-{{ $item->id }}" class="text-gray-600">
-                            <x-table.cell class="w-6 pl-2 pr-0">
-                                <x-checkbox wire:model="selected" value="{{ $item->id }}" />
+                            <x-table.cell class="max-w-2xl">
+                                @if ($item->is_verified)
+                                {{-- COMPUTE IF VERIFIED --}}
+                                <a href="{{ route('account-computation',['user_id'=>Auth::user()->id,'id'=>$item->id]) }}" class="flex px-2 py-2 text-sm font-medium text-center text-gray-700 bg-blue-300 border border-gray-300 shadow-sm rounded-xl hover:bg-blue-500 hover:text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z" />
+                                    </svg>
+                                    Compute
+                                </a>
+                                @else
+                                {{-- VERIFIED ACCOUNT FIRST--}}
+                                <a href="{{ route('account-verification',['user_id'=>Auth::user()->id,'id'=>$item->id]) }}" class="flex px-2 py-2 text-sm font-medium text-center text-gray-700 bg-white border border-gray-300 shadow-sm rounded-xl hover:bg-blue-500 hover:text-white">
+                                    <x-icon.verified class="w-5 h-5 mr-1" />
+                                    Verify
+                                </a>
+                                @endif
                             </x-table.cell>
                             <x-table.cell class="flex space-y-2">
                                 @if ($item->is_verified == 1)
@@ -150,23 +164,7 @@
                             <x-table.cell>
                                 <span>{{ $item->rtdp_payment_covered_year }}</span>
                             </x-table.cell>
-                            <x-table.cell class="max-w-2xl">
-                                @if ($item->is_verified)
-                                {{-- COMPUTE IF VERIFIED --}}
-                                <a href="{{ route('account-computation',['user_id'=>Auth::user()->id,'id'=>$item->id]) }}" class="flex px-2 py-2 text-sm font-medium text-center text-gray-700 bg-blue-300 border border-gray-300 shadow-sm rounded-xl hover:bg-blue-500 hover:text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z" />
-                                    </svg>
-                                    Compute
-                                </a>
-                                @else
-                                {{-- VERIFIED ACCOUNT FIRST--}}
-                                <a href="{{ route('account-verification',['user_id'=>Auth::user()->id,'id'=>$item->id]) }}" class="flex px-2 py-2 text-sm font-medium text-center text-gray-700 bg-white border border-gray-300 shadow-sm rounded-xl hover:bg-blue-500 hover:text-white">
-                                    <x-icon.verified class="w-5 h-5 mr-1" />
-                                    Verify
-                                </a>
-                                @endif
-                            </x-table.cell>
+
                         </x-table.row>
                         @empty
                         <x-table.row wire:loading.class.delay="opacity-50">
