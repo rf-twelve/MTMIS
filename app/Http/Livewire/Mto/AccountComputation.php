@@ -75,14 +75,14 @@ class AccountComputation extends Component
     {
         $this->quarter_enabled =! $this->quarter_enabled;
         if ($this->quarter_enabled) {
-            $this->compute_final_result = $this->compute_quarter_result;
+            // $this->compute_final_result = $this->compute_quarter_result;
             // foreach ($this->compute_quarter_result as $key => $value) {
             //     data_set($this->compute_quarter_result, $key.'.cbt', true);
             //     data_set($this->compute_quarter_result, $key.'.total', $value['tax_due']);
             // }
             $this->notify('Quarterly Enabled: Show quarterly computation!');
         } else {
-            $this->compute_final_result = $this->compute_bracket_result;
+            // $this->compute_final_result = $this->compute_bracket_result;
             // foreach ($this->compute_quarter_result as $key => $value) {
             //     data_set($this->compute_quarter_result, $key.'.cbt', false);
             //     data_set($this->compute_quarter_result, $key.'.total', $value['tax_due'] + $value['penalty']);
@@ -95,15 +95,15 @@ class AccountComputation extends Component
     {
         $this->cbt_enabled =! $this->cbt_enabled;
         if ($this->cbt_enabled) {
-            foreach ($this->compute_quarter_result as $key => $value) {
-                data_set($this->compute_quarter_result, $key.'.cbt', true);
-                data_set($this->compute_quarter_result, $key.'.total', $value['tax_due']);
+            foreach ($this->compute_final_result as $key => $value) {
+                data_set($this->compute_final_result, $key.'.cbt', true);
+                data_set($this->compute_final_result, $key.'.total', $value['tax_due']);
             }
             $this->notify('CBT Enabled: Penalty, removed!');
         } else {
-            foreach ($this->compute_quarter_result as $key => $value) {
-                data_set($this->compute_quarter_result, $key.'.cbt', false);
-                data_set($this->compute_quarter_result, $key.'.total', $value['tax_due'] + $value['penalty']);
+            foreach ($this->compute_final_result as $key => $value) {
+                data_set($this->compute_final_result, $key.'.cbt', false);
+                data_set($this->compute_final_result, $key.'.total', $value['tax_due'] + $value['penalty']);
             }
             $this->notify('CBT Enabled: Penalty, added!');
         }
