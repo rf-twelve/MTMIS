@@ -25,11 +25,13 @@ class AccountComputation extends Component
     public $assessment_roll_array = [];
     public $account_selected;
     public $cbt_enabled = false;
+    public $quarter_enabled = false;
     public $toggle_bracket = false;
     public $search_option, $search_input, $input_date, $month_selected = 'march';
     public $compute_quarter_result= []; // #COMPUTE BY QUARTER RESULT
     public $compute_bracket_result = []; // #COMPUTE BY BRACKET RESULT
     public $compute_year_result = []; // #COMPUTE BY YEAR RESULT
+    public $compute_final_result = []; // #COMPUTE BY YEAR RESULT
     public $compute_no_penalty_result = []; // #COMPUTE BY NO PENALTY RESULT
     ## ASSESSMENT ROLL VARIABLES
     // public $assmt_td_arp_no, $assmt_pin, $assmt_owner, $assmt_address, $assmt_lot_blk_no, $assmt_barangay, $assmt_municity, $assmt_province, $assmt_kind, $assmt_class, $assmt_av, $assmt_effectivity, $assmt_prev_td_arp_no, $assmt_prev_av, $assmt_remarks;
@@ -37,12 +39,12 @@ class AccountComputation extends Component
     public $assmt_roll_td_arp_no,$assmt_roll_pin,$assmt_roll_owner,$assmt_roll_address,$assmt_roll_lot_blk_no,$assmt_roll_brgy,$assmt_roll_municity,$assmt_roll_province,$assmt_roll_kind,$assmt_roll_class,$assmt_roll_av,$assmt_roll_effective,$assmt_roll_td_arp_no_prev,$assmt_roll_av_prev,$assmt_roll_remarks,$assmt_roll_status;
     ## Assessed Value Component
     public $av_year_from, $av_year_to, $av_value;
-    ## Pament Record Component
+    ## Payment Record Component
     public $pay_date,$pay_serial_no,$pay_teller,$pay_payee,$pay_fund,$pay_type,$pay_year_from,$pay_year_to,$pay_basic,$pay_sef,$pay_penalty,$pay_quarter_from,$pay_quarter_to,$pay_covered_year,$pay_amount_due,$pay_cash,$pay_change,$pay_directory,$pay_remarks;
 
     public $assessed_value_modal = false;
     public $payment_record_modal = false;
-    public $open_peyment_modal = false;
+    public $open_payment_modal = false;
     public $showDeleteSelectedRecordModal = false;
 
     ## VERIFYING RECORD
@@ -58,7 +60,7 @@ class AccountComputation extends Component
             if (is_null($data->rtdp_payment_start) || empty($data->rtdp_payment_start)) {
                 $this->notify('RPT Account payment start, Not found!');
             }else{
-                ## Check for new av if exist
+                ## Check for assessed value
                 if ($data->assessed_values->count() < 1) {
                     $this->notify('RPT Account assessed value, Not found!');
                 }else{
@@ -68,6 +70,26 @@ class AccountComputation extends Component
         }
     }
 
+    ## TOGGLE QUARTERLY
+    public function toggleQuarterly()
+    {
+        $this->quarter_enabled =! $this->quarter_enabled;
+        if ($this->quarter_enabled) {
+            $this->compute_final_result = $this->compute_quarter_result;
+            // foreach ($this->compute_quarter_result as $key => $value) {
+            //     data_set($this->compute_quarter_result, $key.'.cbt', true);
+            //     data_set($this->compute_quarter_result, $key.'.total', $value['tax_due']);
+            // }
+            $this->notify('Quarterly Enabled: Show quarterly computation!');
+        } else {
+            $this->compute_final_result = $this->compute_bracket_result;
+            // foreach ($this->compute_quarter_result as $key => $value) {
+            //     data_set($this->compute_quarter_result, $key.'.cbt', false);
+            //     data_set($this->compute_quarter_result, $key.'.total', $value['tax_due'] + $value['penalty']);
+            // }
+            $this->notify('Quarterly Disabled: Show regular computation!');
+        }
+    }
     ## TOGGLE PENALTIES
     public function removeAllPenalty()
     {
@@ -83,7 +105,7 @@ class AccountComputation extends Component
                 data_set($this->compute_quarter_result, $key.'.cbt', false);
                 data_set($this->compute_quarter_result, $key.'.total', $value['tax_due'] + $value['penalty']);
             }
-            $this->notify('CBT Enabled: Penalty, added!'.$this->cbt_enabled);
+            $this->notify('CBT Enabled: Penalty, added!');
         }
     }
 
@@ -128,15 +150,15 @@ class AccountComputation extends Component
 
     public function openPayment()
     {
-        $this->open_peyment_modal = true;
+        $this->open_payment_modal = true;
     }
     public function closePayment()
     {
-        $this->open_peyment_modal = false;
+        $this->open_payment_modal = false;
     }
     public function savePayment()
     {
-        $this->open_peyment_modal = false;
+        $this->open_payment_modal = false;
     }
 
 

@@ -24,24 +24,29 @@ trait WithPaymentComputation
                     'year_to as to',
                     'year_no',
                     'label',
+                    'is_old_av',
                     $this->month_selected.' as value',
                     'av_percent',
                 )->get();
         ## Identify old av
-        $old_av = ($brackets->where('label','Tax due 2021')->first())->from;
+        $old_av = ($brackets->where('is_old_av',1)->first())->from;
 
         $var_array = [
-            'next_pay_year' => $next_pay['pay_year'],
-            'next_pay_quarter' => $next_pay['pay_quarter'],
+            'last_pay_year' => $data->rtdp_payment_covered_to,
+            'last_pay_quarter' => $data->rtdp_payment_quarter_to,
             'old_av_year' => $old_av,
             'new_av_year' => $old_av + 1,
             'assessed_values' => $unpaid_av,
             'brackets' => $brackets->where('to','>=',$next_pay['pay_year'])->toArray(),
         ];
+        // dd($var_array);
         if ($next_pay['pay_year'] > $brackets->last()->from) {
             $this->notify('RPT Account payment is updated!');
         } else {
-            $this->compute_quarter_result = $this->regularCompute($var_array);
+            $this->compute_bracket_result = $this->regularCompute($var_array);
+            $this->compute_year_result = $this->yearlyCompute($this->compute_bracket_result);
+            $this->compute_quarter_result = $this->quarterCompute($this->compute_year_result);
+            $this->compute_final_result =$this->compute_bracket_result;
             // dd($this->regularCompute($var_array));
         }
 
@@ -49,10 +54,10 @@ trait WithPaymentComputation
     ## GET NEEDED DATA
         ## 1.Last payment(year,quarter)
         public function getNextPaymentYearAndQuarter($year,$quarter){
-            if($quarter >= 0.25 && $quarter <= 0.75){
-                return ['pay_year'=>$year, 'pay_quarter'=>$quarter+0.25];
+            if($quarter >= 1 && $quarter <= 3){
+                return ['pay_year'=>$year, 'pay_quarter'=>$quarter+1];
             }else{
-                return ['pay_year'=>$year+1, 'pay_quarter'=>0.25];
+                return ['pay_year'=>$year+1, 'pay_quarter'=>1];
             }
         }
 
@@ -77,14 +82,13 @@ trait WithPaymentComputation
     ## Regular computation below old av
     public function regularCompute($var_array)
     {
-        $last_pay_quarter = $var_array['next_pay_quarter'] - 0.25;
-        $brackets_coll = collect($var_array['brackets']);
+        // dd($var_array);
+        $pay_year = ($var_array['last_pay_quarter'] >= 1 && $var_array['last_pay_quarter'] <= 3)
+            ? $var_array['last_pay_year'] : $var_array['last_pay_year'] + 1;
+        $pay_quarter = ($var_array['last_pay_quarter'] < 4) ? $var_array['last_pay_quarter'] + 1 : 1;
         $av_collection = collect($var_array['assessed_values']);
-        $pay_year = $var_array['next_pay_year'];
-        $pay_quarter = $var_array['next_pay_quarter'];
         $count = 0;
         // $countDiff =  $var_array['old_av_year'] - $var_array['next_pay_year'];
-
         foreach ($var_array['brackets'] as $key => $bracket) {
             $check_inc = ($bracket['label'] == '35% of increase'
                 || $bracket['label'] == '70% of increase') ? true : false;
@@ -98,30 +102,98 @@ trait WithPaymentComputation
                 $av_value = $av_found['value'] * 0.01;
             }
 
-            $quarterArray[$key]['index'] = $key;
-            $quarterArray[$key]['label'] = $bracket['year_no']<=1 ? $bracket['label'] : $bracket['label'].'('.$bracket['year_no'].')';
-            $quarterArray[$key]['from'] = $pay_year;
-            $quarterArray[$key]['to'] = $bracket['to'];
-            $quarterArray[$key]['q_from'] = $pay_quarter;
-            $quarterArray[$key]['q_to'] = 1;
-            $quarterArray[$key]['year_no'] = $bracket['to'] - $pay_year + 1;
-            $quarterArray[$key]['av'] = $av_value ?? 0;
-            $quarterArray[$key]['tax_due'] = $quarterArray[$key]['av'] *  $quarterArray[$key]['year_no'];
-            $quarterArray[$key]['penalty'] = round(($quarterArray[$key]['tax_due'] * $bracket['value']),2);
-            $quarterArray[$key]['penalty_temp'] = $quarterArray[$key]['penalty'];
-            $quarterArray[$key]['total'] = ($quarterArray[$key]['tax_due'] + $quarterArray[$key]['penalty'] );
-            $quarterArray[$key]['status'] = true;
-            $quarterArray[$key]['cbt'] = false;
+            $bracket_arr[$key]['index'] = $key;
+            $bracket_arr[$key]['label'] = ($bracket['year_no'] > 1)
+                ? $bracket['label'].'('.$bracket['year_no'].')' : $bracket['label'];
+            $bracket_arr[$key]['from'] = $pay_year;
+            $bracket_arr[$key]['to'] = $bracket['to'];
+            $bracket_arr[$key]['q_from'] = $pay_quarter;
+            $bracket_arr[$key]['q_to'] = 4;
+            $bracket_arr[$key]['year_no'] = ($bracket['to'] - $pay_year)
+                + ( ($pay_quarter >= 2 && $pay_quarter <= 4) ? 1 - $this->convertToDecimal($pay_quarter - 1) : 1);
+            $bracket_arr[$key]['av'] = $av_value ?? 0;
+            $bracket_arr[$key]['tax_due'] = $bracket_arr[$key]['av'] *  $bracket_arr[$key]['year_no'];
+            $bracket_arr[$key]['percent'] = $bracket['value'];
+            $bracket_arr[$key]['penalty'] = round(($bracket_arr[$key]['tax_due'] * $bracket_arr[$key]['percent']),2);
+            $bracket_arr[$key]['penalty_temp'] = $bracket_arr[$key]['penalty'];
+            $bracket_arr[$key]['total'] = ($bracket_arr[$key]['tax_due'] + $bracket_arr[$key]['penalty'] );
+            $bracket_arr[$key]['status'] = true;
+            $bracket_arr[$key]['cbt'] = false;
 
             if ($bracket['label'] == '35% of increase' || $bracket['label'] == 'Tax due 2021') {
                 $pay_year = $bracket['to'];
             }else{
                 $pay_year = $bracket['to']+1;
             }
-            $pay_quarter = 0.25;
+            $pay_quarter = 1;
         }
-        return $quarterArray;
+        // dd($bracket_arr);
+        return $bracket_arr;
     }
+
+    ## COMPUTE BY QUARTER
+    public function yearlyCompute($var_array)
+    {
+        // dd($var_array);
+        foreach ($var_array as $key => $arr) {
+            for ($i=0; $i < $arr['year_no']; $i++) {
+                $label = ($arr['label']=='70% of increase' || $arr['label']=='35% of increase')
+                    ? $arr['label']
+                    : (($arr['q_from'] < 5)
+                        ? $arr['from']+$i.'('.$arr['q_from'].'-'.$arr['q_to'].' quarter)'
+                        : $arr['from']);
+                $yearly_arr[$key.$i]['index'] = $key.$i;
+                $yearly_arr[$key.$i]['label'] = $label;
+                $yearly_arr[$key.$i]['from'] = $arr['from'] + $i;
+                $yearly_arr[$key.$i]['to'] =  $arr['from'] + $i;
+                $yearly_arr[$key.$i]['q_from'] = $arr['q_from'];
+                $yearly_arr[$key.$i]['q_to'] = $arr['q_to'];
+                $yearly_arr[$key.$i]['year_no'] = ($arr['q_from'] > 1)
+                    ? $this->convertToDecimal($arr['q_from'] - 1) : 1;
+                $yearly_arr[$key.$i]['av'] = $arr['av'] ?? 0;
+                $yearly_arr[$key.$i]['tax_due'] = $yearly_arr[$key.$i]['av'] *  $yearly_arr[$key.$i]['year_no'];
+                $yearly_arr[$key.$i]['percent'] =  $arr['percent'];
+                $yearly_arr[$key.$i]['penalty'] = round(($yearly_arr[$key.$i]['tax_due'] * $yearly_arr[$key.$i]['percent']),2);
+                $yearly_arr[$key.$i]['penalty_temp'] = $yearly_arr[$key.$i]['penalty'];
+                $yearly_arr[$key.$i]['total'] = ($yearly_arr[$key.$i]['tax_due'] + $yearly_arr[$key.$i]['penalty'] );
+                $yearly_arr[$key.$i]['status'] = true;
+                $yearly_arr[$key.$i]['cbt'] = false;
+                $arr['q_from'] = 1;
+            }
+        }
+        return $yearly_arr;
+    }
+    ## COMPUTE BY QUARTER
+    public function quarterCompute($var_array)
+    {
+        dd($var_array);
+
+
+        // foreach ($var_array as $key => $arr) {
+        //     for ($i=$arr['q_from']; $i<=$arr['q_to']; $i++) {
+        //         $quarter_arr[$key.$i]['index'] = $key.$i;
+        //         $quarter_arr[$key.$i]['label'] = ($bracket['year_no'] > 1)
+        //             ? $bracket['label'].'('.$bracket['year_no'].')' : $bracket['label'];
+        //         $quarter_arr[$key.$i]['from'] = $pay_year;
+        //         $quarter_arr[$key.$i]['to'] = $bracket['to'];
+        //         $quarter_arr[$key.$i]['q_from'] = $pay_quarter;
+        //         $quarter_arr[$key.$i]['q_to'] = 4;
+        //         $quarter_arr[$key.$i]['year_no'] = ($bracket['to'] - $pay_year)
+        //             + ( ($pay_quarter >= 2 && $pay_quarter <= 4) ? 1 - $this->convertToDecimal($pay_quarter - 1) : 1);
+        //         $quarter_arr[$key.$i]['av'] = $av_value ?? 0;
+        //         $quarter_arr[$key.$i]['tax_due'] = $quarter_arr[$key.$i]['av'] *  $quarter_arr[$key.$i]['year_no'];
+        //         $quarter_arr[$key.$i]['penalty'] = round(($quarter_arr[$key.$i]['tax_due'] * $bracket['value']),2);
+        //         $quarter_arr[$key.$i]['penalty_temp'] = $quarter_arr[$key.$i]['penalty'];
+        //         $quarter_arr[$key.$i]['total'] = ($quarter_arr[$key.$i]['tax_due'] + $quarter_arr[$key.$i]['penalty'] );
+        //         $quarter_arr[$key.$i]['status'] = true;
+        //         $quarter_arr[$key.$i]['cbt'] = false;
+        //     }
+        // }
+        // return $quarter_arr;
+    }
+
+
+
 
     ## OLD AV 35% COMPUTATION
     private function oldAv35($unpaid, $var_array){

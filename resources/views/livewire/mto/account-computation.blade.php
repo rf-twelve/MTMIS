@@ -7,7 +7,7 @@
                 <ol role="list" class="flex items-center space-x-4">
                 <li>
                     <div>
-                    <a href="{{ route('user-dashboard',['user_id'=>Auth::user()->id]) }}" class="text-gray-400 hover:text-gray-700">
+                    <a href="{{ route('user-dashboard',['user_id'=>Auth::user()->id]) }}" class=" hover:text-blue-100">
                         <x-icon.home class="flex-shrink-0 w-5 h-5"/>
                         <span class="sr-only">Home</span>
                     </a>
@@ -16,15 +16,15 @@
 
                 <li>
                     <div class="flex items-center">
-                    <x-icon.chevron-right class="flex-shrink-0 w-5 h-5 text-gray-400"/>
-                    <a href="{{ route('collections',['user_id'=>Auth::user()->id]) }}" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Collections</a>
+                    <x-icon.chevron-right class="flex-shrink-0 w-5 h-5"/>
+                    <a href="{{ route('collections',['user_id'=>Auth::user()->id]) }}" class="ml-4 text-sm font-medium hover:text-blue-100">Collections</a>
                     </div>
                 </li>
 
                 <li>
                     <div class="flex items-center">
-                    <x-icon.chevron-right class="flex-shrink-0 w-5 h-5 text-gray-400"/>
-                    <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700" aria-current="page">Computations</a>
+                    <x-icon.chevron-right class="flex-shrink-0 w-5 h-5"/>
+                    <a href="#" class="ml-4 text-sm font-medium" aria-current="page">Computations</a>
                     </div>
                 </li>
                 </ol>
@@ -38,13 +38,10 @@
             <main class="flex-1 min-w-0 border-t border-gray-200 xl:flex">
 
                 <div class="order-first xl:block xl:flex-shrink-0">
-                    <div class="relative flex flex-col h-full bg-gray-100 border-r border-gray-200 w-96">
+                    <div class="relative flex flex-col h-full bg-gray-100 border-r border-gray-200 sm:w-full w-96">
                         <div class="flex-shrink-0">
-                            <div
-                                class="flex px-6 py-2 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                                </svg>
+                            <div class="flex px-6 py-2 text-sm font-medium text-white bg-blue-500 border-t border-b border-gray-200">
+                                <x-icon.form class="w-5 h-5" />
                                 <span class="pl-2">RPT ACCOUNT INFO</span>
                                 {{-- <a href="#" class="flex ml-3 text-indigo-600 hover:text-indigo-900">
                                     <x-icon.edit class="w-4 h-4" /><span class="text-xs">Edit</span>
@@ -52,7 +49,7 @@
 
                             </div>
                         </div>
-                        <nav class="flex-1 min-h-0 overflow-y-auto">
+                        <nav class="flex-1 min-h-0 overflow-y-auto bg-blue-200">
                             <section aria-labelledby="timeline-title" class="lg:col-start-3 lg:col-span-1">
                                     <!-- ACCOUNT DETAILS -->
                                 <div class="px-2 border-t border-gray-200 text-md sm:p-0">
@@ -182,11 +179,11 @@
 
                     <!-- RIGTH SIDE SPACE -->
                     <div class="flex-1 overflow-y-auto lg:block">
-                        <div class="min-h-screen pb-6 bg-white shadow">
+                        <div class="bg-white shadow ">
                             <div class="sm:items-baseline sm:justify-between">
 
                                 <!-- ASSESSED VALUE TABLE -->
-                                <div class="flex px-6 py-2 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                <div class="flex px-6 py-2 text-sm font-medium text-white bg-blue-500 border-t border-b border-gray-200 ">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
@@ -241,7 +238,7 @@
                                 </div>
 
                                 {{-- PAYMENT RECORDS TABLE --}}
-                                <div class="flex px-6 py-2 mt-6 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                <div class="flex px-6 py-2 mt-3 text-sm font-medium text-white bg-blue-500 border-t border-b border-gray-200">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
@@ -317,24 +314,35 @@
                                 </div>
 
                                 {{-- TAX DUE TABLE --}}
-                                <div class="flex justify-between px-6 py-2 mt-6 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
+                                <div class="flex justify-between px-6 py-2 mt-3 text-sm font-medium text-white bg-blue-500 border-t border-b border-gray-200">
                                     <div class="flex">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                         </svg>
                                         <span class="pl-2">TAX DUE</span>
                                     </div>
-                                    <div x-data={cbt_enabled:false} class="flex text-right">
-                                            <!-- This example requires Tailwind CSS v2.0+ -->
+                                    <div x-data={cbt_enabled:false,quarter_enabled:false} class="flex text-right">
+                                        <div class="flex mr-4">
+                                            <button wire:click="toggleQuarterly()" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
+                                                <span class="sr-only">Use Quartter</span>
+                                                <span aria-hidden="true" class="absolute w-full h-full bg-white pointer-events-none rounded-xl"></span>
+                                                <!-- Enabled: "bg-indigo-600", Not Enabled: "bg-gray-200" -->
+                                                <span aria-hidden="true" class="{{ $quarter_enabled ? 'bg-blue-500':'bg-gray-200' }} absolute h-4 mx-auto transition-colors duration-200 ease-in-out rounded-full pointer-events-none w-9"></span>
+                                                <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
+                                                <span aria-hidden="true" class="{{ $quarter_enabled ? 'translate-x-5':'translate-x-0' }} absolute left-0 inline-block w-5 h-5 transition-transform duration-200 ease-in-out transform translate-x-5 bg-white border border-gray-200 rounded-full shadow pointer-events-none ring-0"></span>
+                                            </button>
+                                            <span class="ml-2 text-xs">Quarter</span>
+                                        </div>
+
                                         <button wire:click="removeAllPenalty()" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
-                                            <span class="sr-only">Use setting</span>
-                                            <span aria-hidden="true" class="absolute w-full h-full bg-white rounded-md pointer-events-none"></span>
+                                            <span class="sr-only">Use CBT</span>
+                                            <span aria-hidden="true" class="absolute w-full h-full bg-white pointer-events-none rounded-xl"></span>
                                             <!-- Enabled: "bg-indigo-600", Not Enabled: "bg-gray-200" -->
-                                            <span aria-hidden="true" class="{{ $cbt_enabled ? 'bg-indigo-600':'bg-gray-200' }} absolute h-4 mx-auto transition-colors duration-200 ease-in-out rounded-full pointer-events-none w-9"></span>
+                                            <span aria-hidden="true" class="{{ $cbt_enabled ? 'bg-blue-500':'bg-gray-200' }} absolute h-4 mx-auto transition-colors duration-200 ease-in-out rounded-full pointer-events-none w-9"></span>
                                             <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
                                             <span aria-hidden="true" class="{{ $cbt_enabled ? 'translate-x-5':'translate-x-0' }} absolute left-0 inline-block w-5 h-5 transition-transform duration-200 ease-in-out transform translate-x-5 bg-white border border-gray-200 rounded-full shadow pointer-events-none ring-0"></span>
                                         </button>
-                                        <span class="ml-3 text-xs">CBT</span>
+                                        <span class="ml-2 text-xs">CBT</span>
                                     </div>
                                 </div>
                                 <div class="flex flex-col">
@@ -360,7 +368,7 @@
                                             <x-slot name="body">
 
                                                 <?php $sef = 0; ?>
-                                                @forelse ($compute_quarter_result as $key => $result)
+                                                @forelse ($compute_final_result as $key => $result)
                                                     <tr class="{{ $result['status'] == true ? '':'bg-gray-400' }} px-3 py-2 text-gray-500 border whitespace-nowrap">
                                                         @if ($result['status'] == true)
                                                             <td class="px-3 py-2 border"><x-checkbox wire:click="toggleBracket({{ $key }})" checked/></td>
@@ -403,8 +411,8 @@
                                                         <div class="flex justify-between">
                                                             <span>GRAND TOTAL</span>
                                                             <a wire:click="openPayment()" href="#"
-                                                                class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-900 bg-white rounded-xl hover:bg-blue-500 focus:z-10 focus:bg-blue-500">
-                                                                <x-icon.circle-check class="w-5 h-5 mr-1 text-gray-400" />
+                                                                class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-900 bg-white rounded-xl hover:bg-blue-500 hover:text-white focus:z-10 focus:text-white focus:bg-blue-500">
+                                                                <x-icon.circle-check class="w-5 h-5 mr-1" />
                                                                 <span>Payment</span>
                                                             </a>
                                                         </div>
@@ -432,9 +440,7 @@
                 <x-modal.dialog wire:model="assessed_value_modal" maxWidth="sm">
                     <x-slot name="title">
                         <div class="flex">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                            </svg>
+                            <x-icon.form class="w-5 h-5" />
                             <span>ASSESSED VALUE FORM</span>
                         </div>
                     </x-slot>
@@ -459,9 +465,7 @@
                 <x-modal.dialog wire:model="payment_record_modal" maxWidth="sm">
                     <x-slot name="title">
                         <div class="flex">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                            </svg>
+                            <x-icon.form class="w-5 h-5" />
                             <span>PAYMENT RECORD FORM</span>
                         </div>
                     </x-slot>
@@ -483,12 +487,10 @@
 
             <!-- OPEN PAYMENT FORM -->
             <div>
-                <x-modal.dialog wire:model="open_peyment_modal" maxWidth="md">
+                <x-modal.dialog wire:model="open_payment_modal" maxWidth="md">
                     <x-slot name="title">
                         <div class="flex">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                            </svg>
+                           <x-icon.form class="w-5 h-5" />
                             <span>PAYMENT FORM</span>
                         </div>
                     </x-slot>

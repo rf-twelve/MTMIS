@@ -8,10 +8,21 @@ trait WithConvertValue
     public function convertQuarter($value)
     {
         switch ($value) {
-            case 0.25: return 'Q1';
-            case 0.50: return 'Q2';
-            case 0.75: return 'Q3';
-            default: return 'Q4'; break;
+            case 1: return 'Q1';
+            case 2: return 'Q2';
+            case 3: return 'Q3';
+            case 4: return 'Q4';
+            default: return ''; break;
+        }
+    }
+    public function convertToDecimal($value)
+    {
+        switch ($value) {
+            case 1: return 0.25;
+            case 2: return 0.50;
+            case 3: return 0.75;
+            case 4: return 1;
+            default: return 1; break;
         }
     }
 
