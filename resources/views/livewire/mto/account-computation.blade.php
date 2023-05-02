@@ -323,7 +323,24 @@
                                     </div>
                                     <div x-data={cbt_enabled:false,quarter_enabled:false} class="flex text-right">
                                         <div class="flex mr-4">
-                                            <button wire:click="toggleQuarterly()" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
+
+                                            <div class="flex space-x-3">
+                                                <div class="flex items-center">
+                                                    <input id="push-everything" name="push-notifications" type="radio" class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                                    <label for="push-everything" class="block ml-1 text-sm font-medium text-white"> Bracket </label>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <input id="push-email" name="push-notifications" type="radio" class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                                    <label for="push-email" class="block ml-1 text-sm font-medium text-white"> Yearly </label>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <input id="push-nothing" name="push-notifications" type="radio" class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                                                    <label for="push-nothing" class="block ml-1 text-sm font-medium text-white"> Quarterly </label>
+                                                </div>
+                                            </div>
+
+
+                                            {{-- <button wire:click="toggleQuarterly()" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
                                                 <span class="sr-only">Use Quartter</span>
                                                 <span aria-hidden="true" class="absolute w-full h-full bg-white pointer-events-none rounded-xl"></span>
                                                 <!-- Enabled: "bg-indigo-600", Not Enabled: "bg-gray-200" -->
@@ -331,7 +348,7 @@
                                                 <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
                                                 <span aria-hidden="true" class="{{ $quarter_enabled ? 'translate-x-5':'translate-x-0' }} absolute left-0 inline-block w-5 h-5 transition-transform duration-200 ease-in-out transform translate-x-5 bg-white border border-gray-200 rounded-full shadow pointer-events-none ring-0"></span>
                                             </button>
-                                            <span class="ml-2 text-xs">Quarter</span>
+                                            <span class="ml-2 text-xs">Quarter</span> --}}
                                         </div>
 
                                         <button wire:click="removeAllPenalty()" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
