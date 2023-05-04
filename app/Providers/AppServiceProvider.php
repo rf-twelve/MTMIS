@@ -28,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
         Component::macro('notify', function ($message) {
                 $this->dispatchBrowserEvent('notify', $message);
         });
+        Component::macro('alert', function ($message) {
+            $this->dispatchBrowserEvent('alert', $message);
+        });
 
 
         Builder::macro('search', function ($field, $string) {

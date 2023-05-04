@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Mto;
 use App\Http\Livewire\Traits\WithPaymentComputation;
 use App\Models\MaoAssmtRoll;
 use App\Models\MtoRptAccount;
+use App\Models\MtoRptBracket;
 use Illuminate\Support\Str;
 
 use Livewire\Component;
@@ -24,10 +25,13 @@ class AccountComputation extends Component
     public $payment_records_array = [];
     public $assessment_roll_array = [];
     public $account_selected;
+    public $tax_due_table = false;
+    public $alert_message;
     public $cbt_enabled = false;
     public $quarter_enabled = false;
     public $toggle_bracket = false;
     public $search_option, $search_input, $input_date, $month_selected = 'march';
+    public $toggle_computation; // #COMPUTE BY QUARTER RESULT
     public $compute_quarter_result= []; // #COMPUTE BY QUARTER RESULT
     public $compute_bracket_result = []; // #COMPUTE BY BRACKET RESULT
     public $compute_year_result = []; // #COMPUTE BY YEAR RESULT
@@ -46,49 +50,61 @@ class AccountComputation extends Component
     public $payment_record_modal = false;
     public $open_payment_modal = false;
     public $showDeleteSelectedRecordModal = false;
+    public $showAlertNotificationModal = false;
 
     ## VERIFYING RECORD
     public function verifyRptAccount($data){
-        // dump($data);
-        // dump($data->assessed_values);
-        // // $data->assessed_values
-        // dd($data->assessed_values->where('av_year_to','>=',$data->rtdp_payment_start));
         ## CHECKING PENALTY PERCENTAGE
         if($data->is_verified < 1){
-            $this->notify('RPT Account, Not verified!');
+            $this->alert_message = 'RPT Account not verified!';
+            $this->showAlertNotificationModal = true;
         }else{
             if (is_null($data->rtdp_payment_start) || empty($data->rtdp_payment_start)) {
-                $this->notify('RPT Account payment start, Not found!');
+                $this->alert_message = 'RPT Account start of payment, Not found!';
+                $this->showAlertNotificationModal = true;
             }else{
                 ## Check for assessed value
                 if ($data->assessed_values->count() < 1) {
-                    $this->notify('RPT Account assessed value, Not found!');
+                    $this->alert_message = 'Assessed Value not found!';
+                    $this->showAlertNotificationModal = true;
                 }else{
-                    $this->initializeComputation($data);
+                    $unpaid_latest_av = $data['assessed_values']->sortByDesc('av_year_to')->first();
+                    $latest_bracket = MtoRptBracket::orderByDesc('year_to')->first();
+                    if ($unpaid_latest_av['av_year_to'] < $latest_bracket['year_to']) {
+                        $this->alert_message = 'Assessed Value for year '.$latest_bracket['year_to'].' not found!';
+                        $this->showAlertNotificationModal = true;
+                    } else {
+                        $this->initializeComputation($data);
+                        $this->tax_due_table = true;
+                    }
                 }
             }
         }
     }
 
     ## TOGGLE QUARTERLY
-    public function toggleQuarterly()
+    public function toggleComputationType($type)
     {
-        $this->quarter_enabled =! $this->quarter_enabled;
-        if ($this->quarter_enabled) {
-            // $this->compute_final_result = $this->compute_quarter_result;
-            // foreach ($this->compute_quarter_result as $key => $value) {
-            //     data_set($this->compute_quarter_result, $key.'.cbt', true);
-            //     data_set($this->compute_quarter_result, $key.'.total', $value['tax_due']);
-            // }
-            $this->notify('Quarterly Enabled: Show quarterly computation!');
-        } else {
-            // $this->compute_final_result = $this->compute_bracket_result;
-            // foreach ($this->compute_quarter_result as $key => $value) {
-            //     data_set($this->compute_quarter_result, $key.'.cbt', false);
-            //     data_set($this->compute_quarter_result, $key.'.total', $value['tax_due'] + $value['penalty']);
-            // }
-            $this->notify('Quarterly Disabled: Show regular computation!');
+        $this->cbt_enabled = false;
+        $this->toggle_computation = $type;
+        switch ($type) {
+            case 'bracket':
+                $this->compute_final_result = $this->compute_bracket_result;
+                $this->notify('Bracket Enabled: Show Bracket computation!');
+                break;
+            case 'yearly':
+                $this->compute_final_result = $this->compute_year_result;
+                $this->notify('Yearly Enabled: Show Yearly computation!');
+                break;
+            case 'quarterly':
+                $this->compute_final_result = $this->compute_quarter_result;
+                $this->notify('Quarterly Enabled: Show Quarterly computation!');
+                break;
+            default:
+                # code...
+                break;
         }
+
     }
     ## TOGGLE PENALTIES
     public function removeAllPenalty()
@@ -111,10 +127,10 @@ class AccountComputation extends Component
 
     public function removeSelectedPenalty($index_key)
     {
-        foreach ($this->compute_quarter_result as $key => $value) {
+        foreach ($this->compute_final_result as $key => $value) {
             if($key == $index_key){
-                data_set($this->compute_quarter_result, $key.'.cbt', !$value['cbt']);
-                data_set($this->compute_quarter_result, $key.'.total',
+                data_set($this->compute_final_result, $key.'.cbt', !$value['cbt']);
+                data_set($this->compute_final_result, $key.'.total',
                 $value['cbt'] == true ? $value['tax_due'] + $value['penalty'] : $value['tax_due']);
                 $this->notify('Selected bracket, Removed!');
             }
@@ -124,9 +140,9 @@ class AccountComputation extends Component
     ## TOGGLE SELECT AMOUNT DUE
     public function toggleBracket($index_key)
     {
-        foreach ($this->compute_quarter_result as $key => $value) {
+        foreach ($this->compute_final_result as $key => $value) {
             if($key == $index_key){
-                data_set($this->compute_quarter_result, $key.'.status', !$value['status']);
+                data_set($this->compute_final_result, $key.'.status', !$value['status']);
                 $this->notify('Selected bracket, Removed!');
             }
         }
@@ -158,6 +174,30 @@ class AccountComputation extends Component
     }
     public function savePayment()
     {
+        $this->validate([
+            'pay_date' => $this->pay_date,
+            'pay_serial_no' => $this->pay_serial_no,
+            'pay_teller' => $this->pay_teller,
+            'pay_payee' => $this->pay_payee,
+            'pay_fund' => $this->pay_fund,
+            'pay_type' => $this->pay_type,
+            'pay_year_from' => $this->pay_year_from,
+            'pay_year_to' => $this->pay_year_to,
+            'pay_basic' => $this->pay_basic,
+            'pay_sef' => $this->pay_sef,
+            'pay_penalty' => $this->pay_penalty,
+            'pay_quarter_from' => $this->pay_quarter_from,
+            'pay_quarter_to' => $this->pay_quarter_to,
+            'pay_covered_year' => $this->pay_covered_year,
+            'pay_amount_due' => $this->pay_amount_due,
+            'pay_cash' => $this->pay_cash,
+            'pay_change' => $this->pay_change,
+            'pay_directory' => $this->pay_directory,
+            'pay_remarks' => $this->pay_remarks,
+        ]);
+
+
+        dd();
         $this->open_payment_modal = false;
     }
 

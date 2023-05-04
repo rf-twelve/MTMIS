@@ -314,6 +314,7 @@
                                 </div>
 
                                 {{-- TAX DUE TABLE --}}
+                                @if ($tax_due_table)
                                 <div class="flex justify-between px-6 py-2 mt-3 text-sm font-medium text-white bg-blue-500 border-t border-b border-gray-200">
                                     <div class="flex">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -326,29 +327,19 @@
 
                                             <div class="flex space-x-3">
                                                 <div class="flex items-center">
-                                                    <input id="push-everything" name="push-notifications" type="radio" class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                                    <label for="push-everything" class="block ml-1 text-sm font-medium text-white"> Bracket </label>
+                                                    <input wire:click="toggleComputationType('bracket')" {{ $toggle_computation == 'bracket' ? 'checked' : '' }} id="push-bracket" name="computation-type" type="radio" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                    <label for="push-bracket" class="block ml-1 text-sm font-medium text-white"> Bracket </label>
                                                 </div>
                                                 <div class="flex items-center">
-                                                    <input id="push-email" name="push-notifications" type="radio" class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                                    <label for="push-email" class="block ml-1 text-sm font-medium text-white"> Yearly </label>
+                                                    <input wire:click="toggleComputationType('yearly')" {{ $toggle_computation == 'yearly' ? 'checked' : '' }} id="push-yearly" name="computation-type" type="radio" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                    <label for="push-yearly" class="block ml-1 text-sm font-medium text-white"> Yearly </label>
                                                 </div>
                                                 <div class="flex items-center">
-                                                    <input id="push-nothing" name="push-notifications" type="radio" class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                                    <label for="push-nothing" class="block ml-1 text-sm font-medium text-white"> Quarterly </label>
+                                                    <input wire:click="toggleComputationType('quarterly')" {{ $toggle_computation == 'quarterly' ? 'checked' : '' }} id="push-quarter" name="computation-type" type="radio" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                                    <label for="push-quarter" class="block ml-1 text-sm font-medium text-white"> Quarterly </label>
                                                 </div>
                                             </div>
 
-
-                                            {{-- <button wire:click="toggleQuarterly()" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
-                                                <span class="sr-only">Use Quartter</span>
-                                                <span aria-hidden="true" class="absolute w-full h-full bg-white pointer-events-none rounded-xl"></span>
-                                                <!-- Enabled: "bg-indigo-600", Not Enabled: "bg-gray-200" -->
-                                                <span aria-hidden="true" class="{{ $quarter_enabled ? 'bg-blue-500':'bg-gray-200' }} absolute h-4 mx-auto transition-colors duration-200 ease-in-out rounded-full pointer-events-none w-9"></span>
-                                                <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                                                <span aria-hidden="true" class="{{ $quarter_enabled ? 'translate-x-5':'translate-x-0' }} absolute left-0 inline-block w-5 h-5 transition-transform duration-200 ease-in-out transform translate-x-5 bg-white border border-gray-200 rounded-full shadow pointer-events-none ring-0"></span>
-                                            </button>
-                                            <span class="ml-2 text-xs">Quarter</span> --}}
                                         </div>
 
                                         <button wire:click="removeAllPenalty()" type="button" class="relative inline-flex items-center justify-center flex-shrink-0 w-10 h-5 text-sm rounded-full cursor-pointer group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false">
@@ -392,18 +383,21 @@
                                                             <td class="px-3 py-2 border">{{ $result['label'] }}</td>
                                                             <td class="px-3 py-2 border">{{ $result['year_no'] }}</td>
                                                             <td class="px-3 py-2 border">{{ 'P '. $result['av'] }}</td>
-                                                            <td class="px-3 py-2 border">{{ 'P '. $result['tax_due'] }}</td>
-                                                            <td class="px-3 py-2 border">
-                                                                <x-checkbox wire:click="removeSelectedPenalty({{ $key }})" />
-                                                            </td>
+                                                            <td class="px-3 py-2 border">{{ 'P '. $result['tax_due'] }}{{ $result['cbt'] }}</td>
                                                             @if ($result['cbt'] == true)
+                                                                <td class="px-3 py-2 border">
+                                                                    <x-checkbox wire:click="removeSelectedPenalty({{ $key }})" checked/>
+                                                                </td>
                                                                 <td class="px-3 py-2 bg-gray-400 border">{{ 'P 0.00' }}</td>
                                                             @else
+                                                                <td class="px-3 py-2 border">
+                                                                    <x-checkbox wire:click="removeSelectedPenalty({{ $key }})" />
+                                                                </td>
                                                                 <td class="px-3 py-2 border">{{ 'P '. number_format($result['penalty_temp'], 2, '.', ',') }}</td>
                                                             @endif
                                                                 <td class="px-3 py-2 border">{{ 'P '. number_format($result['total'], 2, '.', ',') }}</td>
                                                         @else
-                                                            <td class="px-3 py-2 border"><x-checkbox wire:click="toggleBracket({{ $key }})"/></td>
+                                                            <td class="px-3 py-2 border"><x-checkbox wire:click="toggleBracket({{ $key }})" /></td>
                                                             <td class="px-3 py-2 border">{{ $result['label'] }}</td>
                                                             <td class="px-3 py-2 border">{{ $result['year_no'] }}</td>
                                                             <td class="px-3 py-2 border">{{ 'P 0.00'}}</td>
@@ -427,11 +421,13 @@
                                                     <td colspan="7" class="px-3 py-2 border">
                                                         <div class="flex justify-between">
                                                             <span>GRAND TOTAL</span>
-                                                            <a wire:click="openPayment()" href="#"
+
+                                                            <button wire:click="openPayment()"
                                                                 class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-900 bg-white rounded-xl hover:bg-blue-500 hover:text-white focus:z-10 focus:text-white focus:bg-blue-500">
                                                                 <x-icon.circle-check class="w-5 h-5 mr-1" />
                                                                 <span>Payment</span>
-                                                            </a>
+                                                            </button>
+
                                                         </div>
                                                     </td>
                                                     <td class="px-3 py-2 text-lg font-medium bg-white border">{{ 'P '. number_format($sef * 2, 2, '.', ',') }}</td>
@@ -440,6 +436,8 @@
                                         </x-table>
                                     </div>
                                 </div>
+                                @endif
+
 
                             </div>
                         </div>
@@ -545,6 +543,22 @@
                         </x-slot>
                     </x-modal.confirmation>
                 </form>
+            </div>
+             <!-- Alert Notification Modal -->
+             <div>
+                <x-modal.confirmation wire:model.defer="showAlertNotificationModal" selectedIcon="delete">
+                    <x-slot name="title">Alert Notification</x-slot>
+
+                    <x-slot name="content">
+                        <div class="py-8 text-gray-700">{{ $alert_message }}</div>
+                    </x-slot>
+
+                    <x-slot name="footer">
+                        <x-button class="bg-blue-500 hover:bg-blue-400" type="button" wire:click.prevent="$set('showAlertNotificationModal', false)">
+                            <span class="text-white">Confirm</span>
+                        </x-button>
+                    </x-slot>
+                </x-modal.confirmation>
             </div>
 
         </div>

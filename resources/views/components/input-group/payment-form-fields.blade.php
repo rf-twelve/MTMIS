@@ -58,12 +58,12 @@
         <x-form.text-area wire:model.lazy="pay_remarks" id="pay_remarks" rows="3"></x-form.text-area>
         @error('pay_remarks')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
     </div>
-    <div class="space-y-1 sm:col-span-6">
+    <div class="space-y-1 sm:col-span-3">
         <label for="pay_cash" class="text-sm">CASH :</label>
         <x-input wire:model.debounce.500ms="pay_cash" id="pay_cash" type="number" placeholder="Enter amount"/>
         @error('pay_cash')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror
     </div>
-    <div class="space-y-1 sm:col-span-6">
+    <div class="space-y-1 sm:col-span-3">
         <label for="pay_change" class="text-sm">CHANGE :</label>
         <x-input wire:model.debounce.500ms="pay_change" id="pay_change" type="text" disabled/>
         @error('pay_change')<x-comment class="text-red-500">*{{ $message }}</x-comment>@enderror

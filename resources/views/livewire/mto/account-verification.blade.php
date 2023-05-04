@@ -2,16 +2,16 @@
     <div class="flex flex-col min-h-0">
 
         <nav class="flex bg-blue-500 border-b border-gray-200" aria-label="Breadcrumb">
-            <ol role="list" class="justify-between flex w-full max-w-screen-xl px-4 mx-auto space-x-4 sm:px-6 lg:px-8">
+            <ol role="list" class="flex justify-between w-full max-w-screen-xl px-4 mx-auto space-x-4 sm:px-6 lg:px-8">
 
-                <span class="flex space-x-2 py-2">
+                <span class="flex py-2 space-x-2">
                     <a href="{{ route('account-list',['user_id'=>auth()->user()->id]) }}"
-                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 hover:text-white hover:bg-blue-500 bg-white rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
+                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white hover:text-white hover:bg-blue-500 rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
                         <x-icon.arrow-curve-left class="mr-2.5 h-5 w-5" />
                         <span>Back</span>
                     </a>
                     <a wire:click="verifyAndSave()" href="#"
-                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 hover:text-white hover:bg-blue-500 bg-white rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
+                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white hover:text-white hover:bg-blue-500 rounded-xl focus:z-10 hover:border-blue-600 focus:outline-none focus:ring-1 hover:ring-blue-600">
                         <x-icon.verified class="mr-2.5 h-5 w-5" />
                         <span>Verify & Save</span>
                     </a>
@@ -36,13 +36,13 @@
         <!-- Bottom section -->
         <div class="flex-1 min-h-0 overflow-hidden">
             <!-- Main area -->
-            <main class="flex-1 min-w-0 border-t border-gray-200 bg-gray-100 xl:flex">
+            <main class="flex-1 min-w-0 bg-gray-100 border-t border-gray-200 xl:flex">
 
                 <div class="order-first xl:block xl:flex-shrink-0">
                     <div class="relative flex flex-col h-full border-gray-200 w-96">
                         <div class="flex-shrink-0">
                             <div
-                                class="flex px-6 py-2 text-sm font-medium border-t border border-gray-200 bg-blue-600 text-white">
+                                class="flex px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-t border-gray-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                 </svg>
@@ -56,7 +56,7 @@
                         <nav class="flex-1 min-h-0 overflow-y-auto">
                             <section aria-labelledby="timeline-title" class="lg:col-start-3 lg:col-span-1">
                                     <!-- ACCOUNT DETAILS -->
-                                <div class="px-2 border-t border-gray-200 text-md sm:p-0 pr-4">
+                                <div class="px-2 pr-4 border-t border-gray-200 text-md sm:p-0">
                                     <dl class="sm:divide-y sm:divide-gray-200">
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
@@ -188,12 +188,12 @@
                 <div class="order-first xl:block xl:flex-shrink-0">
                     <div class="relative flex flex-col h-full bg-gray-200 border-gray-200 w-96">
                         <div class="flex-shrink-0">
-                            <div class="flex px-6 py-2 text-sm font-medium border border-gray-200 bg-blue-600 text-white">
+                            <div class="flex px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-gray-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                 </svg>
                                 <span class="pl-2">ASSESSMENT ROLL</span>
-                                <a wire:click="mergeRecord()" href="#" class="flex ml-3 text-indigo-600 hover:text-indigo-900">
+                                <a wire:click="mergeRecord()" href="#" class="flex ml-3 text-white hover:text-blue-100">
                                     <x-icon.arrow-down-on-square class="w-4 h-4" /><span class="text-xs">Merge</span>
                                 </a>
 
@@ -202,7 +202,7 @@
                         <nav class="flex-1 min-h-0 overflow-y-auto">
                             <section aria-labelledby="timeline-title" class="lg:col-start-3 lg:col-span-1">
                                     <!-- ASSESSMENT ROLL DETAILS -->
-                                <div class="px-2 border-t border-gray-200 text-md sm:p-0 pr-4">
+                                <div class="px-2 pr-4 border-t border-gray-200 text-md sm:p-0">
                                     <dl class="sm:divide-y sm:divide-gray-200">
                                         <div class="h-12 py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-blue-500">
@@ -219,16 +219,16 @@
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-blue-500">
                                                 OWNER :</dt>
-                                            <dd class="mt-1 h-16 overflow-y-auto text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                            <dd class="h-16 mt-1 overflow-y-auto text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                                 {{ $assmt_roll_owner }}</dd>
                                         </div>
-                                        <div class="mt-2 py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
+                                        <div class="py-2 mt-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-blue-500">
                                                 ADDRESS :</dt>
-                                            <dd class="mt-1 h-16 overflow-y-auto text-gray-900 sm:mt-0 sm:col-span-2">
+                                            <dd class="h-16 mt-1 overflow-y-auto text-gray-900 sm:mt-0 sm:col-span-2">
                                                 {{ $assmt_roll_address }}</dd>
                                         </div>
-                                        <div class="h-12 mt-5 py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
+                                        <div class="h-12 py-2 mt-5 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-blue-500">
                                                 LOT/BLK NO. :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
@@ -288,7 +288,7 @@
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
                                                 {{ $assmt_roll_av_prev }}</dd>
                                         </div>
-                                        <div class="h-16 overflow-y-auto py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
+                                        <div class="h-16 py-2 overflow-y-auto sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-blue-500">
                                                 REMARKS :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
@@ -302,15 +302,15 @@
                 </div>
 
 
-                <section aria-labelledby="message-heading" class="flex bg-gray-100 flex-col flex-1 h-full min-w-0 overflow-hidden xl:order-last">
+                <section aria-labelledby="message-heading" class="flex flex-col flex-1 h-full min-w-0 overflow-hidden bg-gray-100 xl:order-last">
                     <!-- Document Details -->
-                    <div class="flex-1 overflow-y-auto lg:block max-h-screen">
+                    <div class="flex-1 max-h-screen overflow-y-auto lg:block">
                         <div class="min-h-screen pb-6 shadow">
                             <div class="sm:items-baseline sm:justify-between">
 
                                 {{-- ASSESSMENT ROLL TABLE --}}
                                 <div class="{{ !empty($assessment_roll_search) ? '': 'sr-only'}}">
-                                <div class="flex px-6 py-2 text-sm font-medium border border-gray-200 bg-blue-600 text-white">
+                                <div class="flex px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-gray-200">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
@@ -320,7 +320,7 @@
                                     <div class="min-w-full overflow-hidden overflow-x-scroll align-middle shadow">
                                         <x-table>
                                             <x-slot name="head">
-                                                <thead class="px-3 text-sm text-center text-gray-500 border border-gray-400 bg-gray-300">
+                                                <thead class="px-3 text-sm text-center text-gray-500 bg-gray-300 border border-gray-400">
                                                     <tr class="font-semibold">
                                                         <th class="border border-gray-50">#</th>
                                                         <th class="border border-gray-50">TD/ARP No.</th>
@@ -348,7 +348,7 @@
                                                     <td class="px-3 border">{{ $ar_array['assmt_roll_kind'] }}</td>
                                                     <td class="px-3 border">{{ $ar_array['assmt_roll_class'] }}</td>
                                                     <td class="flex px-3 border">
-                                                        <a wire:click="selectSetAssessmentRoll({{ $ar_array }})" href="#" class="text-indigo-600 hover:text-indigo-900 flex py-2">
+                                                        <a wire:click="selectSetAssessmentRoll({{ $ar_array }})" href="#" class="flex py-2 text-indigo-600 hover:text-indigo-900">
                                                             <x-icon.circle-check class="w-4 h-4" /><span class="text-xs">Select</span>
                                                         </a>
                                                     </td>
@@ -365,7 +365,7 @@
                                 </div>
 
                                 {{-- ASSESSED VALUE TABLE --}}
-                                <div class="flex px-6 py-2 text-sm font-medium border bg-blue-600 text-white">
+                                <div class="flex px-6 py-2 text-sm font-medium text-white bg-blue-600 border">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
@@ -391,13 +391,13 @@
                                                         <td class="border border-gray-300">
                                                             <table class="w-full">
                                                                 <tr class="bg-gray-300">
-                                                                    <td class="font-semibold flex">
+                                                                    <td class="flex font-semibold">
                                                                         @if ($av_array['av_year_from'] == $av_array['av_year_from'])
                                                                             {{ $av_array['av_year_from']}}
                                                                         @else
                                                                             {{ $av_array['av_year_from'].'-'.$av_array['av_year_from'] }}
                                                                         @endif
-                                                                        <div class="ml-1 mt-1 flex">
+                                                                        <div class="flex mt-1 ml-1">
                                                                             <a wire:click="editAssessedValue({{ $key }})" href="#" class="text-blue-500 hover:text-indigo-900">
                                                                                 <x-icon.edit class="w-4" />
                                                                             </a>
@@ -424,7 +424,7 @@
                                 </div>
 
                                 {{-- PAYMENT RECORDS TABLE --}}
-                                <div class="flex px-6 py-2 mt-4 text-sm font-medium border bg-blue-600 text-white">
+                                <div class="flex px-6 py-2 mt-4 text-sm font-medium text-white bg-blue-600 border">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
@@ -439,13 +439,13 @@
                                             <x-slot name="head">
                                                 <thead class="px-3 text-sm text-center bg-gray-200">
                                                     <tr class="font-semibold">
-                                                        <th rowspan="2" class="text-center border bg-gray-300">#</th>
-                                                        <th colspan="4" class="text-center border bg-gray-300">TAX COLLECTED</th>
-                                                        <th rowspan="2" class="text-center border bg-gray-300">O.R. No.</th>
-                                                        <th colspan="4" class="text-center border bg-gray-300">PAYMENT DETAILS</th>
-                                                        <th rowspan="2" class="border bg-gray-300">DIRECTORY</th>
-                                                        <th rowspan="2" class="border bg-gray-300">REMARKS</th>
-                                                        <th rowspan="2" class="border bg-gray-300">TELLER</th>
+                                                        <th rowspan="2" class="text-center bg-gray-300 border">#</th>
+                                                        <th colspan="4" class="text-center bg-gray-300 border">TAX COLLECTED</th>
+                                                        <th rowspan="2" class="text-center bg-gray-300 border">O.R. No.</th>
+                                                        <th colspan="4" class="text-center bg-gray-300 border">PAYMENT DETAILS</th>
+                                                        <th rowspan="2" class="bg-gray-300 border">DIRECTORY</th>
+                                                        <th rowspan="2" class="bg-gray-300 border">REMARKS</th>
+                                                        <th rowspan="2" class="bg-gray-300 border">TELLER</th>
                                                         <th rowspan="2" class="relative py-3.5 pl-3 pr-4 sm:pr-6 bg-gray-300">
                                                             <span class="">OPTION</span>
                                                         </th>
