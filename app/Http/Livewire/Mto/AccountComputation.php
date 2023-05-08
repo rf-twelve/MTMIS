@@ -5,7 +5,9 @@ namespace App\Http\Livewire\Mto;
 use App\Http\Livewire\Traits\WithPaymentComputation;
 use App\Models\MaoAssmtRoll;
 use App\Models\MtoRptAccount;
+use App\Models\MtoRptBooklet;
 use App\Models\MtoRptBracket;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 use Livewire\Component;
@@ -14,16 +16,11 @@ class AccountComputation extends Component
 {
     use WithPaymentComputation;
 
-    public $account_id;
-    public $sample;
-    public $assessment_roll_id;
-    public $payment_record_id;
     public $rpt_account;
-    public $assessed_values_key = '';
-    public $payment_records_key = '';
     public $assessed_values_array = [];
     public $payment_records_array = [];
     public $assessment_roll_array = [];
+    public $booklet;
     public $account_selected;
     public $tax_due_table = false;
     public $alert_message;
@@ -44,7 +41,7 @@ class AccountComputation extends Component
     ## Assessed Value Component
     public $av_year_from, $av_year_to, $av_value;
     ## Payment Record Component
-    public $pay_date,$pay_serial_no,$pay_teller,$pay_payee,$pay_fund,$pay_type,$pay_year_from,$pay_year_to,$pay_basic,$pay_sef,$pay_penalty,$pay_quarter_from,$pay_quarter_to,$pay_covered_year,$pay_amount_due,$pay_cash,$pay_change,$pay_directory,$pay_remarks;
+    public $pay_date,$pay_serial_no,$pay_teller,$pay_teller_name,$pay_payee,$pay_fund,$pay_type,$pay_year_from,$pay_year_to,$pay_basic,$pay_sef,$pay_penalty,$pay_quarter_from,$pay_quarter_to,$pay_covered_year,$pay_amount_due,$pay_amount_due_format,$pay_amount_words,$pay_cash,$pay_change,$pay_directory,$pay_remarks;
 
     public $assessed_value_modal = false;
     public $payment_record_modal = false;
@@ -112,14 +109,16 @@ class AccountComputation extends Component
         $this->cbt_enabled =! $this->cbt_enabled;
         if ($this->cbt_enabled) {
             foreach ($this->compute_final_result as $key => $value) {
-                data_set($this->compute_final_result, $key.'.cbt', true);
+                data_set($this->compute_final_result, $key.'.penalty', 0);
                 data_set($this->compute_final_result, $key.'.total', $value['tax_due']);
+                data_set($this->compute_final_result, $key.'.cbt', true);
             }
             $this->notify('CBT Enabled: Penalty, removed!');
         } else {
             foreach ($this->compute_final_result as $key => $value) {
+                data_set($this->compute_final_result, $key.'.penalty', $value['penalty_temp']);
+                data_set($this->compute_final_result, $key.'.total', $value['tax_due'] + $value['penalty_temp']);
                 data_set($this->compute_final_result, $key.'.cbt', false);
-                data_set($this->compute_final_result, $key.'.total', $value['tax_due'] + $value['penalty']);
             }
             $this->notify('CBT Enabled: Penalty, added!');
         }
@@ -127,45 +126,62 @@ class AccountComputation extends Component
 
     public function removeSelectedPenalty($index_key)
     {
-        foreach ($this->compute_final_result as $key => $value) {
-            if($key == $index_key){
-                data_set($this->compute_final_result, $key.'.cbt', !$value['cbt']);
-                data_set($this->compute_final_result, $key.'.total',
-                $value['cbt'] == true ? $value['tax_due'] + $value['penalty'] : $value['tax_due']);
-                $this->notify('Selected bracket, Removed!');
-            }
-        }
+        $cbt = $this->compute_final_result[$index_key]['cbt'];
+        $penalty_temp = $this->compute_final_result[$index_key]['penalty_temp'];
+        $tax_due = $this->compute_final_result[$index_key]['tax_due'];
+        ## REVERSE : If cbt is true peralty is true else false
+        data_set($this->compute_final_result, $index_key.'.penalty',
+            $cbt === true ? $penalty_temp : 0);
+        data_set($this->compute_final_result, $index_key.'.total',
+            $cbt === true ? $penalty_temp + $tax_due : $tax_due);
+        data_set($this->compute_final_result, $index_key.'.cbt', !$this->compute_final_result[$index_key]['cbt']);
     }
 
     ## TOGGLE SELECT AMOUNT DUE
     public function toggleBracket($index_key)
     {
-        foreach ($this->compute_final_result as $key => $value) {
-            if($key == $index_key){
-                data_set($this->compute_final_result, $key.'.status', !$value['status']);
-                $this->notify('Selected bracket, Removed!');
-            }
-        }
+        $status = $this->compute_final_result[$index_key]['status'];
+        $penalty_temp = $this->compute_final_result[$index_key]['penalty_temp'];
+        $tax_due = $this->compute_final_result[$index_key]['tax_due'];
+        data_set($this->compute_final_result, $index_key.'.status', !$status);
+        data_set($this->compute_final_result, $index_key.'.penalty',
+            $status === true ? 0 : $penalty_temp);
+        data_set($this->compute_final_result, $index_key.'.total',
+            $status === true ? 0 : $penalty_temp + $tax_due);
+        ($status === true)
+            ? $this->notify('Selected bracket, Removed!')
+            : $this->notify('Selected bracket, Added!');
     }
 
+    ## MOUNT DATA TO PUBLIC VARIABLES
     public function mount($id)
     {
-        $data = MtoRptAccount::with('assessed_values','payment_records')->find($id);
-        $assmt_roll = MaoAssmtRoll::where('assmt_roll_pin',$data->rpt_pin)->first();
-        $this->account_id = $id;
-        $this->assessment_roll_id = $assmt_roll->id ?? '';
-
+        $data = MtoRptAccount::with('assessed_values','payment_records','issued_receipts','issued_receipt_datas')->find($id);
         $this->verifyRptAccount($data);
+        $this->rpt_account = $data;
+        $this->assessed_values_array = $data['assessed_values'];
+        $this->payment_records_array = $data['payment_records'];
 
-        $this->setRptAccount($data);
-        $this->setAssessmentRoll();
-        $this->setAssessedValues($data);
-        $this->setPaymentRecord($data);
+        dd($data);
         // $this->setDataToField($id);
     }
 
     public function openPayment()
     {
+        $collected = collect($this->compute_final_result)->where('status',true);
+        $label_arr = [
+            'year_from' => ($collected->first())['from'] ?? '',
+            'year_to' => ($collected->last())['to'] ?? '',
+            'quarter_from' => ($collected->first())['q_from'] ?? '',
+            'quarter_to' => ($collected->last())['q_to'] ?? '',
+        ];
+        $this->pay_date = date('Y-m-d');
+        $this->pay_serial_no = $this->getSerialNumber();
+        $this->pay_amount_due = $collected->sum('total') * 2;
+        $this->pay_amount_due_format = 'P '.number_format($this->pay_amount_due,2,'.',',');
+        $this->pay_teller_name = auth()->user()->fullname;
+        $this->pay_teller = auth()->user()->id;
+        $this->pay_remarks = $this->createLabelName($label_arr);
         $this->open_payment_modal = true;
     }
     public function closePayment()
@@ -174,386 +190,93 @@ class AccountComputation extends Component
     }
     public function savePayment()
     {
-        $this->validate([
-            'pay_date' => $this->pay_date,
-            'pay_serial_no' => $this->pay_serial_no,
-            'pay_teller' => $this->pay_teller,
-            'pay_payee' => $this->pay_payee,
-            'pay_fund' => $this->pay_fund,
-            'pay_type' => $this->pay_type,
-            'pay_year_from' => $this->pay_year_from,
-            'pay_year_to' => $this->pay_year_to,
-            'pay_basic' => $this->pay_basic,
-            'pay_sef' => $this->pay_sef,
-            'pay_penalty' => $this->pay_penalty,
-            'pay_quarter_from' => $this->pay_quarter_from,
-            'pay_quarter_to' => $this->pay_quarter_to,
-            'pay_covered_year' => $this->pay_covered_year,
-            'pay_amount_due' => $this->pay_amount_due,
-            'pay_cash' => $this->pay_cash,
-            'pay_change' => $this->pay_change,
-            'pay_directory' => $this->pay_directory,
-            'pay_remarks' => $this->pay_remarks,
+        $valid = $this->validate([
+            'pay_date' => 'required',
+            'pay_amount_words' => 'nullable',
+            'pay_cash' => 'required|numeric|gte:pay_amount_due',
+            'pay_change' => 'required',
+            'pay_serial_no' => 'required',
+            'pay_type' => 'required',
+            'pay_fund' => 'required',
+            'pay_directory' => 'nullable',
+            'pay_remarks' => 'nullable',
+            'pay_payee' => 'required',
         ]);
+        $collected = collect($this->compute_final_result)->where('status',true);
+        $label_arr = [
+            'year_from' => ($collected->first())['from'] ?? '',
+            'year_to' => ($collected->last())['to'] ?? '',
+            'quarter_from' => ($collected->first())['q_from'] ?? '',
+            'quarter_to' => ($collected->last())['q_to'] ?? '',
+        ];
+        $valid['pay_amount_due'] = $this->pay_amount_due;
+        $valid['pay_year_from'] = $label_arr['year_from'];
+        $valid['pay_year_to'] = $label_arr['year_to'];
+        $valid['pay_quarter_from'] = $label_arr['quarter_from'];
+        $valid['pay_quarter_to'] = $label_arr['quarter_to'];
+        $valid['pay_covered_year'] = $this->createLabelName($label_arr);
+        $valid['pay_basic'] = $collected->sum('total');
+        $valid['pay_sef'] = $collected->sum('total');
+        $valid['pay_penalty'] = $collected->sum('penalty');
+        $valid['pay_teller'] = auth()->user()->id;
+
+        dd($valid);
+        $this->rpt_account->payment_records()->create([
+            "pay_date" =>$valid['pay_date'],
+            "pay_year_from" =>$valid['pay_year_from'],
+            "pay_year_to" =>$valid['pay_year_to'],
+            "pay_quarter_from" =>$valid['pay_quarter_from'],
+            "pay_quarter_to" =>$valid['pay_quarter_to'],
+            "pay_covered_year" =>$valid['pay_covered_year'],
+            "pay_basic" =>$valid['pay_basic'],
+            "pay_sef" =>$valid['pay_sef'],
+            "pay_penalty" =>$valid['pay_penalty'],
+            "pay_amount_due" =>$valid['pay_amount_due'],
+            "pay_cash" =>$valid['pay_cash'],
+            "pay_change" =>$valid['pay_change'],
+            "pay_fund" =>$valid['pay_fund'],
+            "pay_type" =>$valid['pay_type'],
+            "pay_serial_no" =>$valid['pay_serial_no'],
+            "pay_directory" =>$valid['pay_directory'],
+            "pay_remarks" =>$valid['pay_remarks'],
+            "pay_teller" =>$valid['pay_teller'],
+            "pay_payee" =>$valid['pay_payee'],
+        ]);
+        $this->notify('Record verified successfully.');
+        return redirect()->route('account-list',['user_id'=>auth()->user()->id]);
 
 
-        dd();
+
         $this->open_payment_modal = false;
     }
 
 
-    // SET RPT ACCOUNT
-    public function setRptAccount($data)
-    {
-        $this->rpt_pin = $data['rpt_pin'];
-        $this->rpt_kind = $data['rpt_kind'];
-        $this->rpt_class = $data['rpt_class'];
-        $this->rpt_td_no = $data['rpt_td_no'];
-        $this->rpt_arp_no = $data['rpt_arp_no'];
-        $this->ro_name = $data['ro_name'];
-        $this->ro_address = $data['ro_address'];
-        $this->lp_lot_blk_no = $data['lp_lot_blk_no'];
-        $this->lp_street = $data['lp_street'];
-        $this->lp_brgy = $data['lp_brgy'];
-        $this->lp_municity = $data['lp_municity'];
-        $this->lp_province = $data['lp_province'];
-        $this->assmt_av = $data['assmt_av'];
-        $this->assmt_effective = $data['assmt_effective'];
-        $this->assmt_td_arp_no_prev = $data['assmt_td_arp_no_prev'];
-        $this->assmt_av_prev = $data['assmt_av_prev'];
-        $this->rtdp_td_basic = $data['rtdp_td_basic'];
-        $this->rtdp_td_sef = $data['rtdp_td_sef'];
-        $this->rtdp_td_penalty = $data['rtdp_td_penalty'];
-        $this->rtdp_td_total = $data['rtdp_td_total'];
-        $this->rtdp_tc_basic = $data['rtdp_tc_basic'];
-        $this->rtdp_tc_sef = $data['rtdp_tc_sef'];
-        $this->rtdp_tc_penalty = $data['rtdp_tc_penalty'];
-        $this->rtdp_tc_total = $data['rtdp_tc_total'];
-        $this->rtdp_payment_date = $data['rtdp_payment_date'];
-        $this->rtdp_or_no = $data['rtdp_or_no'];
-        $this->rtdp_payment_covered = $data['rtdp_payment_covered_year'];
-        $this->rtdp_payment_covered_fr = $data['rtdp_payment_covered_fr'];
-        $this->rtdp_payment_covered_to = $data['rtdp_payment_covered_to'];
-        $this->rtdp_payment_quarter_fr = is_null($data['rtdp_payment_quarter_fr']) ? 1 : $data['rtdp_payment_quarter_fr'];
-        $this->rtdp_payment_quarter_to = is_null($data['rtdp_payment_quarter_to']) ? 1 : $data['rtdp_payment_quarter_to'];
-        $this->rtdp_remarks = $data['rtdp_remarks'];
-        $this->rtdp_directory = $data['rtdp_directory'];
-        $this->rtdp_payment_start = $data['rtdp_payment_start'];
-    }
+    ## Catching updated property
+    public function updated($propertyName){
+        switch ($propertyName) {
+            case 'pay_cash':
+                $this->pay_cash = empty($this->pay_cash) ? 0 : $this->pay_cash;
+                $this->pay_change = number_format($this->pay_cash - $this->pay_amount_due,2,'.',',');
+                break;
 
-    public function selectSetAssessmentRoll($ar_array){
-        $this->assessment_roll_id = $ar_array['id'] ?? '';
-        $this->setAssessmentRoll();
-    }
-
-    // SET RPT ACCOUNT
-    public function setAssessmentRoll()
-    {
-        if ($this->assessment_roll_id) {
-            $assmt_roll = MaoAssmtRoll::find($this->assessment_roll_id);
-            $this->assmt_roll_td_arp_no = $assmt_roll->assmt_roll_td_arp_no;
-            $this->assmt_roll_pin = $assmt_roll->assmt_roll_pin;
-            $this->assmt_roll_owner = $assmt_roll->assmt_roll_owner;
-            $this->assmt_roll_address = $assmt_roll->assmt_roll_address;
-            $this->assmt_roll_lot_blk_no = $assmt_roll->assmt_roll_lot_blk_no;
-            $this->assmt_roll_brgy = $assmt_roll->BarangayName;
-            $this->assmt_roll_municity = $assmt_roll->MunicityName;
-            $this->assmt_roll_province = $assmt_roll->ProvinceName;
-            $this->assmt_roll_kind = $assmt_roll->assmt_roll_kind;
-            $this->assmt_roll_class = $assmt_roll->assmt_roll_class;
-            $this->assmt_roll_av = $assmt_roll->assmt_roll_av;
-            $this->assmt_roll_effective = $assmt_roll->assmt_roll_effective;
-            $this->assmt_roll_td_arp_no_prev = $assmt_roll->assmt_roll_td_arp_no_prev;
-            $this->assmt_roll_av_prev = $assmt_roll->assmt_roll_av_prev;
-            $this->assmt_roll_remarks = $assmt_roll->assmt_roll_remarks;
-            $this->assmt_roll_status = $assmt_roll->assmt_roll_status;
+            default:
+                # code...
+                break;
         }
     }
 
-    ## SET ASSESSED VALUES
-    public function setAssessedValues($data)
-    {
-        $av_filtered = collect($data)->only(
-            "temp_1957_1966","temp_1967_1973","temp_1974_1979","temp_1980_1984","temp_1985_1993","temp_1994_1996",
-            "temp_1997_2002","temp_2003_2018","temp_2019_2019","temp_2020_2020","temp_2021_2021","temp_2022_2022",
-        );
-        $av_count = 0;
-        foreach ($av_filtered as $key => $value) {
-            if ($value != '0') {
-                $av_data_arr[$av_count]['av_year_from'] = Str::substr($key, -9, 4);
-                $av_data_arr[$av_count]['av_year_to'] = Str::substr($key, -4, 4);
-                $av_data_arr[$av_count]['av_value'] = $value;
-            }
-            $av_count++;
-        }
-        $this->assessed_values_array = $av_data_arr;
-    }
-
-    ## SET PAYMENT RECORDS
-    public function setPaymentRecord($data)
-    {
-        for ($i=0; $i < 1; $i++) {
-            $this->payment_records_array[$i]['pay_date'] = $data['rtdp_payment_date'];
-            $this->payment_records_array[$i]['pay_year_from'] = $data['rtdp_payment_covered_fr'];
-            $this->payment_records_array[$i]['pay_year_to'] = $data['rtdp_payment_covered_to'];
-            $this->payment_records_array[$i]['pay_quarter_from'] = is_null($data['rtdp_payment_quarter_fr']) ? 1 : $data['rtdp_payment_quarter_fr'];
-            $this->payment_records_array[$i]['pay_quarter_to'] = is_null($data['rtdp_payment_quarter_to']) ? 1 : $data['rtdp_payment_quarter_to'];
-            $this->payment_records_array[$i]['pay_covered_year'] = $data['rtdp_payment_covered_year'];
-            $this->payment_records_array[$i]['pay_basic'] = $data['rtdp_tc_basic'];
-            $this->payment_records_array[$i]['pay_sef'] = $data['rtdp_tc_sef'];
-            $this->payment_records_array[$i]['pay_penalty'] = $data['rtdp_tc_penalty'];
-            $this->payment_records_array[$i]['pay_amount_due'] = $data['rtdp_td_total'] + $data['rtdp_tc_total'];
-            $this->payment_records_array[$i]['pay_cash'] = $data['rtdp_td_total'] + $data['rtdp_tc_total'];
-            $this->payment_records_array[$i]['pay_change'] = 0;
-            $this->payment_records_array[$i]['pay_fund'] = 'general';
-            $this->payment_records_array[$i]['pay_type'] = 'cash';
-            $this->payment_records_array[$i]['pay_serial_no'] = $data['rtdp_or_no'];
-            $this->payment_records_array[$i]['pay_directory'] = $data['rtdp_directory'];
-            $this->payment_records_array[$i]['pay_remarks'] = $data['rtdp_remarks'];
-            $this->payment_records_array[$i]['pay_teller'] = null;
-            $this->payment_records_array[$i]['pay_payee'] = '';
-        }
-    }
-
-
-    ## VERIFY AND SAVE RECORD
-    public function verifyAndSave(){
-        $account = MtoRptAccount::find($this->account_id);
-        $account->update([
-                'rpt_pin' => $this->rpt_pin,
-                'rpt_kind' => $this->rpt_kind,
-                'rpt_class' => $this->rpt_class,
-                'rpt_td_no' => $this->rpt_td_no,
-                'rpt_arp_no' => $this->rpt_arp_no,
-                'ro_name' => $this->ro_name,
-                'ro_address' => $this->ro_address,
-                'lp_lot_blk_no' => $this->lp_lot_blk_no,
-                'lp_street' => $this->lp_street,
-                'lp_brgy' => $this->lp_brgy,
-                'lp_municity' => $this->lp_municity,
-                'lp_province' => $this->lp_province,
-                'assmt_av' => $this->assmt_av,
-                'assmt_effective' => $this->assmt_effective,
-                'assmt_td_arp_no_prev' => $this->assmt_td_arp_no_prev,
-                'assmt_av_prev' => $this->assmt_av_prev,
-                'rtdp_td_basic' => $this->rtdp_td_basic,
-                'rtdp_td_sef' => $this->rtdp_td_sef,
-                'rtdp_td_penalty' => $this->rtdp_td_penalty,
-                'rtdp_td_total' => $this->rtdp_td_total,
-                'rtdp_tc_basic' => $this->rtdp_tc_basic,
-                'rtdp_tc_sef' => $this->rtdp_tc_sef,
-                'rtdp_tc_penalty' => $this->rtdp_tc_penalty,
-                'rtdp_tc_total' => $this->rtdp_tc_total,
-                'rtdp_payment_date' => $this->rtdp_payment_date,
-                'rtdp_or_no' => $this->rtdp_or_no,
-                'rtdp_payment_covered' => $this->rtdp_payment_covered,
-                'rtdp_payment_covered_fr' => $this->rtdp_payment_covered_fr,
-                'rtdp_payment_covered_to' => $this->rtdp_payment_covered_to,
-                'rtdp_payment_quarter_fr' => $this->rtdp_payment_quarter_fr,
-                'rtdp_payment_quarter_to' => $this->rtdp_payment_quarter_to,
-                'rtdp_remarks' => $this->rtdp_remarks,
-                'rtdp_directory' => $this->rtdp_directory,
-                'rtdp_payment_start' => $this->rtdp_payment_start,
-                'is_verified' => 1,
-            ]);
-
-        ## SAVING ASSESSED VALUES
-        foreach ($this->assessed_values_array as $key => $av) {
-            $account->assessed_values()->create([
-                "av_year_from" => $av['av_year_from'],
-                "av_year_to" => $av['av_year_to'],
-                "av_value" => $av['av_value'],
-            ]);
-        }
-
-        ## SAVING PAYMENT RECORDS
-        foreach ($this->payment_records_array as $key => $pr) {
-            $account->payment_records()->create([
-                "pay_date" =>$pr['pay_date'],
-                "pay_year_from" =>$pr['pay_year_from'],
-                "pay_year_to" =>$pr['pay_year_to'],
-                "pay_quarter_from" =>$pr['pay_quarter_from'],
-                "pay_quarter_to" =>$pr['pay_quarter_to'],
-                "pay_covered_year" =>$pr['pay_covered_year'],
-                "pay_basic" =>$pr['pay_basic'],
-                "pay_sef" =>$pr['pay_sef'],
-                "pay_penalty" =>$pr['pay_penalty'],
-                "pay_amount_due" =>$pr['pay_amount_due'],
-                "pay_cash" =>$pr['pay_cash'],
-                "pay_change" =>$pr['pay_change'],
-                "pay_fund" =>$pr['pay_fund'],
-                "pay_type" =>$pr['pay_type'],
-                "pay_serial_no" =>$pr['pay_serial_no'],
-                "pay_directory" =>$pr['pay_directory'],
-                "pay_remarks" =>$pr['pay_remarks'],
-                "pay_teller" =>$pr['pay_teller'],
-                "pay_payee" =>$pr['pay_payee'],
-            ]);
-        }
-        $this->notify('Record verified successfully.');
-        return redirect()->route('account-list',['user_id'=>auth()->user()->id]);
-    }
-
-    ## ASSESSED VALUES - create
-    public function createAssessedValue()
-    {
-        $this->clearAssessedValueFields();
-        $this->assessed_value_modal = true;
-    }
-    ## ASSESSED VALUES - edit
-    public function editAssessedValue($key_selected)
-    {
-        $this->assessed_values_key = $key_selected;
-        foreach ($this->assessed_values_array as $key => $value) {
-            if ($key == $key_selected) {
-                $this->av_year_from = $value['av_year_from'];
-                $this->av_year_to = $value['av_year_to'];
-                $this->av_value = $value['av_value'];
-            }
-        }
-        $this->assessed_value_modal = true;
-    }
-    ## ASSESSED VALUES - delete
-    public function deleteAssessedValue($key_selected)
-    {
-        unset($this->assessed_values_array[$key_selected]);
-        $this->notify('Assessed value removed, Successfully!');
-
-    }
-    ## ASSESSED VALUES - close
-    public function closeAssessedValue()
-    {
-        $this->clearAssessedValueFields();
-        $this->assessed_value_modal = false;
-    }
-    ## ASSESSED VALUES - clear
-    public function clearAssessedValueFields()
-    {
-        $this->assessed_values_key = '';
-        $this->av_year_from = '';
-        $this->av_year_to = '';
-        $this->av_value = '';
-    }
-    ## ASSESSED VALUES - save
-    public function saveAssessedValue()
-    {
-        $new_key = ($this->assessed_values_key == '')
-            ? array_key_last($this->assessed_values_array) + 1
-            : $new_key = $this->assessed_values_key;
-
-        data_set($this->assessed_values_array, $new_key.'.av_year_from',$this->av_year_from);
-        data_set($this->assessed_values_array, $new_key.'.av_year_to',$this->av_year_to);
-        data_set($this->assessed_values_array, $new_key.'.av_value',$this->av_value);
-
-        $this->clearAssessedValueFields();
-        $this->assessed_value_modal = false;
-        $this->notify('Assessed value added, Successfully!');
-    }
-
-    ## PAYMENT RECORDS - create
-    public function createPaymentRecord()
-    {
-        $this->clearPaymentRecord();
-        $this->payment_record_modal = true;
-    }
-    ## PAYMENT RECORDS - edit
-    public function editPaymentRecord($key_selected)
-    {
-        $this->payment_records_key = $key_selected;
-        foreach ($this->payment_records_array as $key => $value) {
-            if ($key == $key_selected) {
-                $this->pay_date = $value['pay_date'];
-                $this->pay_serial_no = $value['pay_serial_no'];
-                $this->pay_teller = $value['pay_teller'];
-                $this->pay_payee = $value['pay_payee'];
-                $this->pay_fund = $value['pay_fund'];
-                $this->pay_type = $value['pay_type'];
-                $this->pay_year_from = $value['pay_year_from'];
-                $this->pay_year_to = $value['pay_year_to'];
-                $this->pay_basic = $value['pay_basic'];
-                $this->pay_sef = $value['pay_sef'];
-                $this->pay_penalty = $value['pay_penalty'];
-                $this->pay_quarter_from = $value['pay_quarter_from'];
-                $this->pay_quarter_to = $value['pay_quarter_to'];
-                $this->pay_covered_year = $value['pay_covered_year'];
-                $this->pay_amount_due = $value['pay_amount_due'];
-                $this->pay_cash = $value['pay_cash'];
-                $this->pay_change = $value['pay_change'];
-                $this->pay_directory = $value['pay_directory'];
-                $this->pay_remarks = $value['pay_remarks'];
-            }
-        }
-        $this->payment_record_modal = true;
-    }
-    ## PAYMENT RECORDS - delete
-    public function deletePaymentRecord($key_selected)
-    {
-        unset($this->payment_records_array[$key_selected]);
-        $this->notify('Payment record deleted, Successfully!');
-    }
-    ## PAYMENT RECORDS - close
-    public function closePaymentRecord()
-    {
-        $this->payment_record_modal = false;
-        $this->clearPaymentRecord();
-    }
-    ## PAYMENT RECORDS - clear
-    public function clearPaymentRecord()
-    {
-        $this->payment_records_key = '';
-        $this->pay_date = '';
-        $this->pay_serial_no = '';
-        $this->pay_teller = '';
-        $this->pay_payee = '';
-        $this->pay_fund = '';
-        $this->pay_type = '';
-        $this->pay_year_from = '';
-        $this->pay_year_to = '';
-        $this->pay_basic = '';
-        $this->pay_sef = '';
-        $this->pay_penalty = '';
-        $this->pay_quarter_from = '';
-        $this->pay_quarter_to = '';
-        $this->pay_covered_year = '';
-        $this->pay_amount_due = '';
-        $this->pay_cash = '';
-        $this->pay_change = '';
-        $this->pay_directory = '';
-        $this->pay_remarks = '';
-    }
-    ## PAYMENT RECORDS - save
-
-    public function savePaymentRecord()
-    {
-        $new_key = ($this->payment_records_key == '')
-        ? array_key_last($this->payment_records_array) + 1
-        : $new_key = $this->payment_records_key;
-
-        data_set($this->payment_records_array, $new_key.'.pay_date',$this->pay_date);
-        data_set($this->payment_records_array, $new_key.'.pay_serial_no',$this->pay_serial_no);
-        data_set($this->payment_records_array, $new_key.'.pay_teller',$this->pay_teller);
-        data_set($this->payment_records_array, $new_key.'.pay_payee',$this->pay_payee);
-        data_set($this->payment_records_array, $new_key.'.pay_fund',$this->pay_fund);
-        data_set($this->payment_records_array, $new_key.'.pay_type',$this->pay_type);
-        data_set($this->payment_records_array, $new_key.'.pay_year_from',$this->pay_year_from);
-        data_set($this->payment_records_array, $new_key.'.pay_year_to',$this->pay_year_to);
-        data_set($this->payment_records_array, $new_key.'.pay_basic',$this->pay_basic);
-        data_set($this->payment_records_array, $new_key.'.pay_sef',$this->pay_sef);
-        data_set($this->payment_records_array, $new_key.'.pay_penalty',$this->pay_penalty);
-        data_set($this->payment_records_array, $new_key.'.pay_quarter_from',$this->pay_quarter_from);
-        data_set($this->payment_records_array, $new_key.'.pay_quarter_to',$this->pay_quarter_to);
-        data_set($this->payment_records_array, $new_key.'.pay_covered_year',$this->pay_covered_year);
-        data_set($this->payment_records_array, $new_key.'.pay_amount_due',$this->pay_amount_due);
-        data_set($this->payment_records_array, $new_key.'.pay_cash',$this->pay_cash);
-        data_set($this->payment_records_array, $new_key.'.pay_change',$this->pay_change);
-        data_set($this->payment_records_array, $new_key.'.pay_directory',$this->pay_directory);
-        data_set($this->payment_records_array, $new_key.'.pay_remarks',$this->pay_remarks);
-
-        $this->payment_record_modal = false;
-        $this->clearPaymentRecord();
-        $this->notify('Payment record added, Successfully!');
-
-    }
+    protected $messages = [
+        // 'rpt_pin.required' => 'Property index Number is required!',
+        'pay_fund.required' => 'Please select fund!',
+        'pay_type.required' => 'Please from cash or checks!',
+        'pay_teller.required' => 'Teller name is required!',
+        'pay_serial_no.required' => 'O.R. / Serial # name is required!',
+        'pay_date.required' => 'Payment date is required!',
+        'pay_payee.required' => 'Payee name is required!',
+        'pay_cash.required' => 'Payment cash/cheque is required!',
+        'pay_cash.numeric' => 'It should be numeric value!',
+        'pay_cash.gte' => 'The pay cash must be greater than or equal amount due!',
+    ];
 
     public function render()
     {

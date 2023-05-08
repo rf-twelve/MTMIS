@@ -58,112 +58,112 @@
                                             <dt class="font-medium text-gray-500">
                                                 TD/ARP No:</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $rpt_td_no }}
+                                                {{ $rpt_account['rpt_td_no']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 PIN :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $rpt_pin }}
+                                                {{ $rpt_account['rpt_pin']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 OWNER :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $ro_name }}
+                                                {{ $rpt_account['ro_name']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 ADDRESS :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $ro_address }}
+                                                {{ $rpt_account['ro_address']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 LOT/BLK NO. :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $lp_lot_blk_no }}
+                                                {{ $rpt_account['lp_lot_blk_no']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 STREET :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $lp_street }}
+                                                {{ $rpt_account['lp_street']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 BARANGAY :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $lp_brgy }}
+                                                {{ $rpt_account['lp_brgy']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 MUNI/CITY :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $lp_municity }}
+                                                {{ $rpt_account['lp_municity']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 PROVINCE :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $lp_province }}
+                                                {{ $rpt_account['lp_province']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 KIND :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $rpt_kind }}
+                                                {{ $rpt_account['rpt_kind']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 CLASS :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $rpt_class }}
+                                                {{ $rpt_account['rpt_class']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 AV :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $assmt_av }}
+                                                {{ $rpt_account['assmt_av']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 EFFECTIVITY :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $assmt_effective }}
+                                                {{ $rpt_account['assmt_effective']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 PREV TD/ARP:</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $assmt_td_arp_no_prev }}
+                                                {{ $rpt_account['assmt_td_arp_no_prev']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 PREV AV :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $assmt_av_prev }}
+                                                {{ $rpt_account['assmt_av_prev']}}
                                             </dd>
                                         </div>
                                         <div class="py-2 sm:py-1 sm:grid sm:grid-cols-3 sm:gap-2 sm:px-6">
                                             <dt class="font-medium text-gray-500">
                                                 REMARKS :</dt>
                                             <dd class="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
-                                                {{ $rtdp_remarks }}
+                                                {{ $rpt_account['rtdp_remarks']}}
                                             </dd>
                                         </div>
                                     </dl>
@@ -505,8 +505,8 @@
                 <x-modal.dialog wire:model="open_payment_modal" maxWidth="md">
                     <x-slot name="title">
                         <div class="flex">
-                           <x-icon.form class="w-5 h-5" />
-                            <span>PAYMENT FORM</span>
+                           <x-icon.form class="w-5 h-5 mr-1 py-2" />
+                            <span class="font-bold my-1">PAYMENT FORM</span>
                         </div>
                     </x-slot>
 

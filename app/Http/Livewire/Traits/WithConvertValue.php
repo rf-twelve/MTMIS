@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Traits;
 
+use App\Models\MtoRptBooklet;
+
 trait WithConvertValue
 {
     ## CONVERT VALUE NUMERIC VALUE TO QUARTER
@@ -24,6 +26,27 @@ trait WithConvertValue
             case 4: return 1;
             default: return 1; break;
         }
+    }
+
+    ## CREAT LABEL NAME BASE ON DATA VALUE
+    public function createLabelName($arr){
+        return
+        $label = ($arr['year_from'] == $arr['year_to'])
+            ? $label = $arr['year_from'].' '. $arr['quarter_from'].'-'.$arr['quarter_to']
+            : $label = $arr['year_from'].' Q'. $arr['quarter_from'].'-'.$label = $arr['year_to'].' Q'.$arr['quarter_to'];
+    }
+
+    ## GET LATEST SERIAL NO
+    public function getSerialNumber(){
+        $this->booklet = MtoRptBooklet::query()
+            ->where('user_id',auth()->user()->id)
+            ->where('end_qty','>',0)
+            ->orderBy('begin_serial_fr')
+            ->first();
+
+        return ($this->booklet)
+            ? $this->booklet->end_serial_fr
+            :'No Serial Number';
     }
 
     ## CONVERT LABEL NAME FROM YEAR AND QUARTER

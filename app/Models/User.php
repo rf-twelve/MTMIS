@@ -42,6 +42,12 @@ class User extends Authenticatable
             ? (Office::find($this->office_id))->name
             : 'Unknown';
     }
+    public function userFullname()
+    {
+        return $this->office_id
+            ? (Office::find($this->office_id))->name
+            : 'Unknown';
+    }
 
 
     /**
