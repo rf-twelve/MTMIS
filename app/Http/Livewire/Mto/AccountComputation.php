@@ -41,7 +41,7 @@ class AccountComputation extends Component
     ## Assessed Value Component
     public $av_year_from, $av_year_to, $av_value;
     ## Payment Record Component
-    public $pay_date,$pay_serial_no,$pay_teller,$pay_teller_name,$pay_payee,$pay_fund,$pay_type,$pay_year_from,$pay_year_to,$pay_basic,$pay_sef,$pay_penalty,$pay_quarter_from,$pay_quarter_to,$pay_covered_year,$pay_amount_due,$pay_amount_due_format,$pay_amount_words,$pay_cash,$pay_change,$pay_directory,$pay_remarks;
+    public $pay_date,$pay_serial_no,$pay_teller,$pay_teller_name,$pay_payee,$pay_fund,$pay_type,$pay_year_from,$pay_year_to,$pay_basic,$pay_sef,$pay_penalty,$pay_quarter_from,$pay_quarter_to,$pay_covered_year,$pay_amount_due,$pay_amount_due_format,$pay_amount_words,$pay_cash,$pay_change,$pay_directory,$pay_remarks,$pay_treasurer,$pay_deputy;
 
     public $assessed_value_modal = false;
     public $payment_record_modal = false;
@@ -162,12 +162,22 @@ class AccountComputation extends Component
         $this->assessed_values_array = $data['assessed_values'];
         $this->payment_records_array = $data['payment_records'];
 
-        dd($data);
+        // dd($data);
         // $this->setDataToField($id);
     }
 
     public function openPayment()
     {
+        $this->pay_payee = 'sample';
+        $this->pay_fund = '1';
+        $this->pay_type = 'cash';
+        $this->pay_amount_words = 'words';
+        $this->pay_cash = '10000.00';
+        $this->pay_directory = 'dir';
+        $this->pay_treasurer = 'treas';
+        $this->pay_deputy = 'deputy';
+
+
         $collected = collect($this->compute_final_result)->where('status',true);
         $label_arr = [
             'year_from' => ($collected->first())['from'] ?? '',
@@ -209,6 +219,9 @@ class AccountComputation extends Component
             'quarter_from' => ($collected->first())['q_from'] ?? '',
             'quarter_to' => ($collected->last())['q_to'] ?? '',
         ];
+        $valid['pay_treasurer'] = $this->pay_treasurer;
+        $valid['pay_deputy'] = $this->pay_deputy;
+
         $valid['pay_amount_due'] = $this->pay_amount_due;
         $valid['pay_year_from'] = $label_arr['year_from'];
         $valid['pay_year_to'] = $label_arr['year_to'];
@@ -220,7 +233,8 @@ class AccountComputation extends Component
         $valid['pay_penalty'] = $collected->sum('penalty');
         $valid['pay_teller'] = auth()->user()->id;
 
-        dd($valid);
+        // dd($collected);
+        // dd($valid);
         $this->rpt_account->payment_records()->create([
             "pay_date" =>$valid['pay_date'],
             "pay_year_from" =>$valid['pay_year_from'],
@@ -242,10 +256,48 @@ class AccountComputation extends Component
             "pay_teller" =>$valid['pay_teller'],
             "pay_payee" =>$valid['pay_payee'],
         ]);
-        $this->notify('Record verified successfully.');
+
+        ## STORE ISSUED RECEIPTS
+        $this->rpt_account->issued_receipts()->create([
+            'prev_trn' => 'prev trn',
+            'prev_date' => 'prev date',
+            'prev_for' => 'prev for',
+            'trn' => $valid['pay_serial_no'],
+            'date' => $valid['pay_date'],
+            'payee' => $valid['pay_payee'],
+            'province' => $this->rpt_account['lp_province'],
+            'city' => $this->rpt_account['lp_municity'],
+            'amount' => $valid['pay_amount_due'],
+            'amount_words' => $valid['pay_amount_words'],
+            'pay_type' => $this->pay_type,
+            'is_basic' => 1,
+            'is_sef' => 1,
+            'for' => $this->createLabelName($label_arr),
+            'owner_name' => $this->rpt_account['ro_name'],
+            'location' => $this->rpt_account['lp_brgy'],
+            'tdn' => $this->rpt_account['rpt_td_no'],
+            // 'rpt_account_id' => $this->get_data['rpt_account_id'],
+            'user_treasurer' => $valid['pay_treasurer'],
+            'user_deputy' => $valid['pay_deputy'],
+            'user_id' => $this->pay_teller,
+        ]);
+
+        ## STORE ISSUED RECEIPT DATAS
+        foreach($collected as $index => $item){
+            $this->rpt_account->issued_receipt_datas()->create([
+                'av' => $item['av'],
+                'td' => $item['tax_due'],
+                'year_no' => $item['year_no'],
+                'label' => ($item['from'] == $item['to']
+                    ? $item['label'] : $item['from'].'-'.$item['to'] ),
+                'total_td' => $item['tax_due'],
+                'penalty' => $item['penalty'],
+                'subtotal' => $item['total'],
+            ]);
+        }
+
+        $this->notify('Transaction saved, successfully.');
         return redirect()->route('account-list',['user_id'=>auth()->user()->id]);
-
-
 
         $this->open_payment_modal = false;
     }

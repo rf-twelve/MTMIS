@@ -15,7 +15,7 @@ class Company extends Model
     {
         return $this->logo
             ? Storage::disk('images')->url($this->logo)
-            : asset('img/dts/dummy_logo.jpg');
+            : asset('img/lgulopezquezon.png');
     }
 
     public function bgUrl()

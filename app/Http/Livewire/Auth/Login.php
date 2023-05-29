@@ -17,6 +17,7 @@ class Login extends Component
 
     public function login()
     {
+        dd('login');
         $credentials = $this->validate();
 
         return auth()->attempt($credentials)
